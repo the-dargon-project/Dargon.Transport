@@ -33,8 +33,10 @@ namespace Dargon.Transport
 
          if (acceptIncomingConnections)
          {
-            m_serverThread = new Thread(ServerThreadStart);
+            var signalledOnWaitingForConnection = new CountdownEvent(1);
+            m_serverThread = new Thread(delegate() { ServerThreadStart(signalledOnWaitingForConnection); });
             m_serverThread.Start();
+            signalledOnWaitingForConnection.Wait();
          }
 
          m_instructionSets.Add(new DefaultInstructionSet());
@@ -45,12 +47,17 @@ namespace Dargon.Transport
          }
       }
       
-      private void ServerThreadStart()
+      private void ServerThreadStart(CountdownEvent signalledOnWaitingForConnection)
       {
          while (m_isAlive)
          {
             var pipeHandle = LowIntegrityPipeFactory.CreateLowIntegrityNamedPipe(m_defaultPipeName);
             var connection = new NamedPipeServerStream(PipeDirection.InOut, true, false, pipeHandle);
+            if (signalledOnWaitingForConnection != null)
+            {
+               signalledOnWaitingForConnection.Signal();
+               signalledOnWaitingForConnection = null;
+            }
             connection.WaitForConnection();
             Console.WriteLine("DSPEx Node got connection");
 
@@ -67,7 +74,7 @@ namespace Dargon.Transport
       /// If null, connects to the default DSPEx pipe ("dargon" aka dargon daemon)
       /// </param>
       /// <returns></returns>
-      public IDSPExSession Connect(string pipeName = null)
+      public IDSPExSession Connect(string pipeName = "dargon")
       {
          var connection = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.WriteThrough);
          connection.Connect();
