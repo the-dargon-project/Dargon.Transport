@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel.Channels;
 using System.Text;
-using Dargon.Games;
-using Dargon.IO.DSP.ClientImpl;
-using Dargon.IO.DSP.Results;
-using Dargon.Util;
+using Dargon.Transport.ClientImpl;
 using ItzWarty;
 
-namespace Dargon.IO.DSP
+using Logger = Dargon.Transport.__DummyLoggerThisIsHorrible;
+
+namespace Dargon.Transport
 {
    public class DSPExClient : IDSPExSession
    {
@@ -102,37 +101,16 @@ namespace Dargon.IO.DSP
       private readonly BufferManager m_outputBufferPool;
 
       /// <summary>
-      /// The Dargon Service
-      /// </summary>
-      private readonly IDargonService m_dargon;
-
-      /// <summary>
-      /// The currently selected Dargon-supported game implementation that the DSPEx.DSP_EX_GAME_OP
-      /// range supplies a shorthand for.
-      /// </summary>
-      private DargonGame m_selectedGame = DargonGame.Any;
-
-      /// <summary>
-      /// Game Contexts, which handle the DSPEx Opcode range allocated for game implementations.
-      /// </summary>
-      private readonly Dictionary<DargonGame, IDSPExGameContext> m_gameContexts = new Dictionary<DargonGame, IDSPExGameContext>();
-
-      /// <summary>
       /// Initializes a new instance of a DSPEx Client which connects to the server at the
       /// given hostname and port.
       /// </summary>
       /// <param name="host">The hostname of the server to connect to</param>
       /// <param name="port">The port of the server to connect to</param>
-      /// <param name="dargon">
-      /// (Optional) The Dargon Service, which is responsible for supporting game-specific opcodes
-      /// in the DSPEx.DSP_EX_GAME_OP range.
-      /// </param>
-      public DSPExClient(string host, int port, IDargonService dargon)
+      public DSPExClient(string host, int port)
       {
          Terminated = false;
          m_outputBufferPool = BufferManager.CreateBufferManager(100, DSPConstants.kMaxMessageSize);
          m_frameTransmitter = new DSPExTCPFrameTransmitter(host, port);
-         m_dargon = dargon;
 
          // Begin our Asynchronous IO.
          m_frameTransmitter.BeginReceivingMessageFrames(RunDSPExIteration);
@@ -148,12 +126,11 @@ namespace Dargon.IO.DSP
       /// (Optional) The Dargon Service, which is responsible for supporting game-specific opcodes
       /// in the DSPEx.DSP_EX_GAME_OP range.
       /// </param>
-      public DSPExClient(string pipeName, IDargonService dargon)
+      public DSPExClient(string pipeName)
       {
          Terminated = false;
          m_outputBufferPool = BufferManager.CreateBufferManager(100, DSPConstants.kMaxMessageSize);
          m_frameTransmitter = new DSPExNamedPipeFrameTransmitter(pipeName);
-         m_dargon = dargon;
 
          // Begin our Asynchronous IO.
          m_frameTransmitter.BeginReceivingMessageFrames(RunDSPExIteration);
@@ -214,16 +191,10 @@ namespace Dargon.IO.DSP
             {
                //We're starting a new transaction.  Read the opcode and then the data block.
                byte opcode = messageBuffer[8]; remainingByteCount--;
-               DargonGame selectedGame = m_selectedGame;
-               if (selectedGame == DargonGame.Any)
-               {
-                  selectedGame = (DargonGame)messageBuffer[9];
-                  remainingByteCount--;
-               }
                DSPExInitialMessage message = new DSPExInitialMessage(transactionId, opcode, messageBuffer, (int)(blockLength - remainingByteCount), remainingByteCount);
                DumpToConsole(message);
 
-               DSPExRITransactionHandler transaction = CreateAndRegisterRITransactionHandler(transactionId, opcode, selectedGame);
+               DSPExRITransactionHandler transaction = CreateAndRegisterRITransactionHandler(transactionId, opcode);
                transaction.ProcessInitialMessage(this, message);
             }
          }
@@ -264,93 +235,6 @@ namespace Dargon.IO.DSP
       }
 
       /// <summary>
-      /// Gets the node id the given resource tree's root node.
-      /// </summary>
-      /// <param name="game">
-      /// The game whose resource tree's node id we are getting.
-      /// </param>
-      /// <returns>
-      /// The resource tree's root node id.
-      /// </returns>
-      public RootInfoResult GetResourceTreeRootInfo(DargonGame game)
-      {
-         uint transactionId = m_locallyInitiatedUIDSet.TakeUniqueID();
-         var handler = new DSPExLITGetResourceTreeRootInfoHandler(transactionId, game);
-         RegisterAndInitializeLITransactionHandler(handler);
-         handler.CompletionCountdownEvent.Wait();
-         return handler.Result;
-      }
-
-      /// <summary>
-      /// Gets the node id the given resource tree's root node.
-      /// </summary>
-      /// <param name="game">
-      /// The game whose resource tree's node id we are getting.
-      /// </param>
-      /// <returns>
-      /// The resource tree's root node id.
-      /// </returns>
-      public RootInfoResult[] GetResourceTreeRootInfos(DargonGame game)
-      {
-         uint transactionId = m_locallyInitiatedUIDSet.TakeUniqueID();
-         var handler = new DSPExLITGetResourceTreeRootInfosHandler(transactionId, null);
-         RegisterAndInitializeLITransactionHandler(handler);
-         handler.CompletionCountdownEvent.Wait();
-         return handler.Results;
-      }
-
-      /// <summary>
-      /// Gets some resource node info for the resource node with the given nodeid.
-      /// </summary>
-      /// <param name="nodeId"></param>
-      /// <param name="requestFlags"></param>
-      /// <returns>
-      /// The request resource node's descriptor, or null.
-      /// </returns>
-      public DSPExNodeResponseDescriptor GetResourceNodeInfo(uint nodeId, DSPExNodeRequestFlags requestFlags)
-      {
-         uint transactionId = m_locallyInitiatedUIDSet.TakeUniqueID();
-         var handler = new DSPExLITGetNodeInfoHandler(transactionId, nodeId, requestFlags);
-         RegisterAndInitializeLITransactionHandler(handler);
-         handler.CompletionCountdownEvent.Wait();
-         return handler.ResponseChildNode;
-      }
-
-      /// <summary>
-      /// Gets some resource node info for the resource node with the given nodeid.
-      /// </summary>
-      /// <param name="nodeIds"></param>
-      /// <param name="requestFlags"></param>
-      /// <returns>
-      /// The request resource node's descriptor, or null.
-      /// </returns>
-      public DSPExNodeResponseDescriptor[] GetResourceNodeInfos(uint[] nodeIds, DSPExNodeRequestFlags requestFlags)
-      {
-         uint transactionId = m_locallyInitiatedUIDSet.TakeUniqueID();
-         var handler = new DSPExLITGetNodeInfosHandler(transactionId, nodeIds, requestFlags);
-         RegisterAndInitializeLITransactionHandler(handler);
-         handler.CompletionCountdownEvent.Wait();
-         return handler.ResponseChildNodes;
-      }
-
-      /// <summary>
-      /// Gets the resource node children info for the resource node with the given nodeid.
-      /// </summary>
-      /// <param name="nodeId"></param>
-      /// <param name="requestFlags"></param>
-      /// <returns>
-      /// The request resource node's childrens' descriptors, or null.
-      /// </returns>
-      public DSPExNodeResponseDescriptor[] GetResourceNodeChildrenInfo(uint nodeId, DSPExNodeRequestFlags requestFlags)
-      {
-         uint transactionId = m_locallyInitiatedUIDSet.TakeUniqueID();
-         var handler = new DSPExLITListNodeChildrenHandler(transactionId, nodeId, requestFlags);
-         RegisterAndInitializeLITransactionHandler(handler);
-         handler.CompletionCountdownEvent.Wait();
-         return handler.ResponseChildNodes;
-      }
-
-      /// <summary>
       /// Creates a remotely initialized transaction handler for the given opcode
       /// </summary>
       /// <param name="transactionId">
@@ -362,27 +246,12 @@ namespace Dargon.IO.DSP
       /// <returns>
       /// The transaction handler, or null if such a transaction handler doesn't exist
       /// </returns>
-      public DSPExRITransactionHandler CreateAndRegisterRITransactionHandler(uint transactionId, byte opcode, DargonGame game)
+      public DSPExRITransactionHandler CreateAndRegisterRITransactionHandler(uint transactionId, byte opcode)
       {
-         DSPExRITransactionHandler riTh;
-         if (opcode >= (byte)DSPEx.DSP_EX_C2S_GAME_OP_LOW &&
-             opcode <= (byte)DSPEx.DSP_EX_C2S_GAME_OP_HIGH)
-         {
-            if (game == DargonGame.Any)
-               throw new ArgumentException("Opcode was in DSP_EX_GAME_OP range, but game was not specified!");
-            if (m_dargon == null)
-               throw new InvalidOperationException("Dargon instance was not specified in construtor of DSPEx Client.  Game opcodes are not supported.");
-            if (!m_gameContexts.ContainsKey(game))
-               m_gameContexts.Add(game, m_dargon.GetGame(game).CreateGameContext(this));
-            riTh = m_gameContexts[game].CreateAndRegisterRITransactionHandler(transactionId, opcode);
-         }
-         else
-         {
-            riTh = (DSPExRITransactionHandler)Activator.CreateInstance(
-               kDSPExOpcodeHandlers[(byte)opcode],
-               transactionId
-            );
-         }
+         DSPExRITransactionHandler riTh = (DSPExRITransactionHandler)Activator.CreateInstance(
+            kDSPExOpcodeHandlers[(byte)opcode],
+            transactionId
+         );
          lock (m_remotelyInitializedTransactionLock)
             m_remotelyInitializedTransactions.Add(transactionId, riTh);
          m_remotelyInitiatedUIDSet.GiveUniqueID(transactionId);

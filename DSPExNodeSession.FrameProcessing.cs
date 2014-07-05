@@ -2,14 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.ServiceModel.Channels;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Dargon.Games;
 
-namespace Dargon.IO.DSP
+namespace Dargon.Transport
 {
    public unsafe partial class DSPExNodeSession
    {
@@ -44,13 +40,6 @@ namespace Dargon.IO.DSP
 
       // : dspex state :
       private bool m_dspExElevated = false; // If false, the connection hasn't been elevated to DSPEx yet
-      private DargonGame m_selectedGame = DargonGame.Any;
-
-      public DargonGame SelectedGame
-      {
-         get { return m_selectedGame; }
-      }
-
 
       // Note: Frame Reader owns m_reader and can access it without a lock
       private void FrameReaderThreadStart()

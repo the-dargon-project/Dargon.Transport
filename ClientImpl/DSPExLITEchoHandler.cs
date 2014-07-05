@@ -1,7 +1,8 @@
 ﻿using System.Runtime.InteropServices;
-using Dargon.Util;
 
-namespace Dargon.IO.DSP.ClientImpl
+using Logger = Dargon.Transport.__DummyLoggerThisIsHorrible;
+
+namespace Dargon.Transport.ClientImpl
 {
    public class DSPExLITEchoHandler : DSPExLITransactionHandler
    {

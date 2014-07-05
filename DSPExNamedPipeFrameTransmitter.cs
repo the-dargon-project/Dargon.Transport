@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.ServiceModel.Channels;
 
-namespace Dargon.IO.DSP
+namespace Dargon.Transport
 {
    public class DSPExNamedPipeFrameTransmitter : IDSPExFrameTransmitter
    {

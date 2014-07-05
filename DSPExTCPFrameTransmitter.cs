@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net.Sockets;
 
-namespace Dargon.IO.DSP
+namespace Dargon.Transport
 {
    public class DSPExTCPFrameTransmitter : IDSPExFrameTransmitter
    {

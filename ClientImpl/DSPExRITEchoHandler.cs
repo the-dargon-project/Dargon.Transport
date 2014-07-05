@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dargon.IO.DSP.ClientImpl
+namespace Dargon.Transport.ClientImpl
 {
    public class DSPExRITEchoHandler : DSPExRITransactionHandler
    {

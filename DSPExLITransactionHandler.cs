@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Dargon.IO.DSP
+namespace Dargon.Transport
 {
    /// <summary>
    /// Represents a client-initiated interaction which is initialized locally and sent to a remote

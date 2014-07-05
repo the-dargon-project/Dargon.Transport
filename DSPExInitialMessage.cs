@@ -1,4 +1,4 @@
-﻿namespace Dargon.IO.DSP
+﻿namespace Dargon.Transport
 {
    /// <summary>
    /// DSP Interactions begin with a DSPExInitialMessage message being sent.  This message will

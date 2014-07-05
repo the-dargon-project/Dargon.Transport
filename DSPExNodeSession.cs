@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Dargon.Games;
 using ItzWarty;
 
-using LITMap = System.Collections.Generic.Dictionary<uint, Dargon.IO.DSP.DSPExLITransactionHandler>;
-using RITMap = System.Collections.Generic.Dictionary<uint, Dargon.IO.DSP.DSPExRITransactionHandler>;
-
-namespace Dargon.IO.DSP
+namespace Dargon.Transport
 {
    /// <summary>
    /// Represents a session between one DSPEx node and another DSPEx node.
@@ -36,10 +28,10 @@ namespace Dargon.IO.DSP
       private readonly UniqueIdentificationSet m_locallyInitiatedUidSet;
       private readonly UniqueIdentificationSet m_remotelyInitiatedUidSet = new UniqueIdentificationSet(false);
 
-      private readonly LITMap m_liTransactions = new LITMap();
+      private readonly Dictionary<uint, DSPExLITransactionHandler> m_liTransactions = new Dictionary<uint, DSPExLITransactionHandler>();
       private readonly object m_liTransactionsLock = new object();
 
-      private readonly RITMap m_riTransactions = new RITMap();
+      private readonly Dictionary<uint, DSPExRITransactionHandler> m_riTransactions = new Dictionary<uint, DSPExRITransactionHandler>();
       private readonly object m_riTransactionsLock = new object();
       
       internal DSPExNodeSession(DSPExNode node, Stream connection, DSPExNodeRole localRole)
@@ -146,18 +138,14 @@ namespace Dargon.IO.DSP
 
       public DSPExRITransactionHandler CreateAndRegisterRITransactionHandler(
          uint transactionId, 
-         byte opcode, 
-         DargonGame game = DargonGame.Any)
+         byte opcode)
       {
-         // Create the RIT Handler
-         if (game == DargonGame.Any)
-            game = m_selectedGame;
 
          DSPExRITransactionHandler riTh = null;
          for (int i = 0; i < m_instructionSets.Count && riTh == null; i++)
          {
             var instructionSet = m_instructionSets[i];
-            var handlerType = instructionSet.GetRemotelyInitializedTransactionHandlerType(opcode, game);
+            var handlerType = instructionSet.GetRemotelyInitializedTransactionHandlerType(opcode);
             if (handlerType != null)
             {
                if (!instructionSet.UseConstructionContext)
@@ -180,7 +168,7 @@ namespace Dargon.IO.DSP
 
          if (riTh == null)
          {
-            var handlerType = m_node.GetRITOpcodeHandlerType(opcode, m_selectedGame);
+            var handlerType = m_node.GetRITOpcodeHandlerType(opcode);
             if (handlerType != null)
             {
                riTh = (DSPExRITransactionHandler)Activator.CreateInstance(
@@ -191,7 +179,7 @@ namespace Dargon.IO.DSP
          }
 
          if (riTh == null)
-            throw new KeyNotFoundException("No instruction set supported opcode " + opcode + " of game " + game);
+            throw new KeyNotFoundException("No instruction set supported opcode " + opcode);
 
          // Register the RIT Handler
          lock (m_riTransactionsLock)

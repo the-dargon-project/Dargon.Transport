@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
-using System.Windows.Forms;
-using ItzWarty;
 
-namespace Dargon.IO.DSP
+namespace Dargon.Transport
 {
    public class DSPExNodeSessionFrameProcessor
    {
@@ -72,7 +69,7 @@ namespace Dargon.IO.DSP
                   if (handler == null)
                   {
                      Console.WriteLine(" => Handler Nonexistant! Opcode: " + opcode);
-                     handler = m_session.CreateAndRegisterRITransactionHandler(transactionId, opcode, m_session.SelectedGame);
+                     handler = m_session.CreateAndRegisterRITransactionHandler(transactionId, opcode);
                      handler.ProcessInitialMessage(
                         m_session,
                         new DSPExInitialMessage(

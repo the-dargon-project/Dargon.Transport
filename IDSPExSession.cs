@@ -1,6 +1,4 @@
-﻿using Dargon.Games;
-
-namespace Dargon.IO.DSP
+﻿namespace Dargon.Transport
 {
    public interface IDSPExSession
    {
@@ -44,7 +42,7 @@ namespace Dargon.IO.DSP
       /// <returns>
       /// The transaction handler, or null if such a transaction handler doesn't exist
       /// </returns>
-      DSPExRITransactionHandler CreateAndRegisterRITransactionHandler(uint transactionId, byte opcode, DargonGame game = DargonGame.Any);
+      DSPExRITransactionHandler CreateAndRegisterRITransactionHandler(uint transactionId, byte opcode);
 
       /// <summary>
       /// Deregisters the remotely initialized transaction's handler, freeing its transaction id.

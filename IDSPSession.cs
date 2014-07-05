@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Dargon.IO.DSP
+namespace Dargon.Transport
 {
-   public interface IDSPSession : ISendTimeContext
+   public interface IDSPSession
    {
       /// <summary>
       /// Whether or not our session is currently in interactive mode.

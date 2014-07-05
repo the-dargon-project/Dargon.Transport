@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Pipes;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Dargon.Games;
-using Dargon.Util;
-using Dargon.Util.NamedPipeServer;
+using ItzWarty.Networking;
 
-namespace Dargon.IO.DSP
+namespace Dargon.Transport
 {
    /// <summary>
    /// A node in a Dargon Service Protocol Extended graph
@@ -84,11 +79,11 @@ namespace Dargon.IO.DSP
          return session;
       }
 
-      public Type GetRITOpcodeHandlerType(byte opcode, DargonGame game)
+      public Type GetRITOpcodeHandlerType(byte opcode)
       {
          foreach (var instructionSet in m_instructionSets)
          {
-            var handlerType = instructionSet.GetRemotelyInitializedTransactionHandlerType(opcode, game);
+            var handlerType = instructionSet.GetRemotelyInitializedTransactionHandlerType(opcode);
             if (handlerType != null)
                return handlerType;
          }

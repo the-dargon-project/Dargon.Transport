@@ -1,6 +1,4 @@
-﻿using Dargon.Games;
-
-namespace Dargon.IO.DSP
+﻿namespace Dargon.Transport
 {
    /// <summary>
    /// Dargon Service Protocol Extended allocates a certain opcode range [DSPEx.DSP_EX_GAME_OP_LOW,

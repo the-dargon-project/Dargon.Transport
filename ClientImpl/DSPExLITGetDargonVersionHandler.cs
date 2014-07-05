@@ -1,6 +1,6 @@
 ﻿using ItzWarty;
 
-namespace Dargon.IO.DSP.ClientImpl
+namespace Dargon.Transport.ClientImpl
 {
    public class DSPExLITGetDargonVersionHandler : DSPExLITransactionHandler
    {

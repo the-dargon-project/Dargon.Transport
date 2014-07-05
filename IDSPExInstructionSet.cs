@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dargon.Games;
 
-namespace Dargon.IO.DSP
+namespace Dargon.Transport
 {
    public interface IDSPExInstructionSet
    {
@@ -20,6 +15,6 @@ namespace Dargon.IO.DSP
       /// </summary>
       object ConstructionContext { get; }
 
-      Type GetRemotelyInitializedTransactionHandlerType(byte opcode, DargonGame game);
+      Type GetRemotelyInitializedTransactionHandlerType(byte opcode);
    }
 }

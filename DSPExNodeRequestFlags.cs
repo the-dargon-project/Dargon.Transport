@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dargon.IO.DSP
+namespace Dargon.Transport
 {
    [Flags]
    public enum DSPExNodeRequestFlags : byte

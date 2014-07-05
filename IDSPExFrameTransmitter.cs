@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dargon.IO.DSP
+namespace Dargon.Transport
 {
    public interface IDSPExFrameTransmitter
    {

@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C9F92566-1F94-4235-944C-19364459F9A6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Dargon.Transport</RootNamespace>
+    <AssemblyName>libdsp</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Channels" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ClientImpl\DSPExLITEchoHandler.cs" />
+    <Compile Include="ClientImpl\DSPExLITGetDargonVersionHandler.cs" />
+    <Compile Include="ClientImpl\DSPExRITEchoHandler.cs" />
+    <Compile Include="DefaultDSPExInstructionSet.cs" />
+    <Compile Include="DSP.cs" />
+    <Compile Include="DSPClientHandler.cs" />
+    <Compile Include="DSPConstants.cs" />
+    <Compile Include="DSPEx.cs" />
+    <Compile Include="DSPExClient.cs" />
+    <Compile Include="DSPExInitialMessage.cs" />
+    <Compile Include="DSPExLITransactionHandler.cs" />
+    <Compile Include="DSPExMessage.cs" />
+    <Compile Include="DSPExNamedPipeFrameTransmitter.cs" />
+    <Compile Include="DSPExNode.cs" />
+    <Compile Include="DSPExNodeRequestFlags.cs" />
+    <Compile Include="DSPExNodeRole.cs" />
+    <Compile Include="DSPExNodeSession.cs" />
+    <Compile Include="DSPExNodeSession.FrameProcessing.cs" />
+    <Compile Include="DSPExNodeSessionFrameProcessor.cs" />
+    <Compile Include="DSPExRequestedAdditionalResourceInfoFlag.cs" />
+    <Compile Include="DSPExRITransactionHandler.cs" />
+    <Compile Include="DSPExTCPFrameTransmitter.cs" />
+    <Compile Include="DSPExtensions.cs" />
+    <Compile Include="IDSPExFrameTransmitter.cs" />
+    <Compile Include="IDSPExGameContext.cs" />
+    <Compile Include="IDSPExInstructionSet.cs" />
+    <Compile Include="IDSPExSession.cs" />
+    <Compile Include="IDSPSession.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="__DummyLoggerThisIsHorrible.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DSPClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libwarty\ItzWarty.csproj">
+      <Project>{097b6b08-4034-408a-b3c0-a12e8f9e8893}</Project>
+      <Name>ItzWarty</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,4 +1,4 @@
-﻿namespace Dargon.IO.DSP
+﻿namespace Dargon.Transport
 {
    enum DSPExRequestedAdditionalResourceInfoFlag
    {

@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dargon.Games;
-using Dargon.IO.DSP.ClientImpl;
+using Dargon.Transport.ClientImpl;
 
-namespace Dargon.IO.DSP
+namespace Dargon.Transport
 {
    public class DefaultDSPExInstructionSet : IDSPExInstructionSet
    {
@@ -18,8 +13,7 @@ namespace Dargon.IO.DSP
       public object ConstructionContext { get { throw new InvalidOperationException("Construction Context unavailable"); } }
 
       public Type GetRemotelyInitializedTransactionHandlerType(
-         byte opcode, 
-         DargonGame game)
+         byte opcode)
       {
          switch ((DSPEx)opcode)
          {

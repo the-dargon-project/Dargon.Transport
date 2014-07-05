@@ -1,4 +1,4 @@
-﻿namespace Dargon.IO.DSP
+﻿namespace Dargon.Transport
 {
    /// <summary>
    /// Represents a client-initiated interaction which is initialized remotely and sent to the
