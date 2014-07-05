@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel.Channels;
 using System.Threading;
+using ItzWarty;
+using Logger = Dargon.Transport.__DummyLoggerThisIsHorrible;
 
 namespace Dargon.Transport
 {
@@ -27,10 +29,8 @@ namespace Dargon.Transport
       private readonly BinaryReader m_reader;
       private readonly BinaryWriter m_writer;
 
-      private readonly BlockingCollection<DtpNodeSessionFrameProcessor> m_idleFrameProcessors = new BlockingCollection<DtpNodeSessionFrameProcessor>(new ConcurrentStack<DtpNodeSessionFrameProcessor>());
-      private readonly List<DtpNodeSessionFrameProcessor> m_frameProcessors = new List<DtpNodeSessionFrameProcessor>();
-      private readonly object m_frameProcessorCollectionLock = new object(); // only for m_frameProcessors if we ever spin up new instances...
-
+      private DtpNodeSessionFrameProcessor[] m_frameProcessors;
+      
       // : Frame Reader : - Actually touched by reader, writer, and processors at the moment.
       private readonly BufferManager m_frameBufferPool = BufferManager.CreateBufferManager(20, DTPConstants.kMaxMessageSize);
       private readonly object m_frameBufferPoolLock = new object();
@@ -59,10 +59,11 @@ namespace Dargon.Transport
 
          try
          {
+            int frameProcessorRoundRobinIndex = 0;
             while (m_node.IsAlive && IsAlive)
             {
                var frameLength = m_reader.ReadUInt32(); // includes frameLength
-               Console.WriteLine("Reading DSPEx Frame of Length " + frameLength);
+               Logger.L(LoggerLevel.Info, "Reading DSPEx Frame of Length " + frameLength);
                var frameContentLength = (int)frameLength - 4;
                var buffer = TakeFrameBuffer(frameContentLength); // thread safe
 
@@ -82,10 +83,12 @@ namespace Dargon.Transport
                //for (int i = 0; i < frameContentLength + 4; i++)
                //   Console.WriteLine(i + ": " + buffer[i].ToString());
 
-               Console.WriteLine("Sending DSPEx Frame of Length " + frameLength + " to processor");
-               var processor = m_idleFrameProcessors.Take();
-               processor.AssignFrame(buffer);
-               Console.WriteLine("Sent DSPEx Frame of Length " + frameLength + " to processor");
+               Logger.L(LoggerLevel.Info, "Sending DSPEx Frame of Length " + frameLength + " to processor");
+               var index = frameProcessorRoundRobinIndex;
+               var processor = m_frameProcessors[frameProcessorRoundRobinIndex];
+               processor.EnqueueFrame(buffer);
+               frameProcessorRoundRobinIndex = (index + 1) % m_frameProcessors.Length;
+               Logger.L(LoggerLevel.Info, "Sent DSPEx Frame of Length " + frameLength + " to processor");
             }
          }
          catch (EndOfStreamException e)
@@ -104,31 +107,27 @@ namespace Dargon.Transport
             // used byte shifting rather than binaryreader/fixed as this is a fairly simple op...
             var buffer = m_frameBuffersToSend.Take(); // Note: Buffer length != frame length!!!
             int frameLength = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-            Console.WriteLine("Writing DSPEx Frame of Length " + frameLength);
+            Logger.L(LoggerLevel.Info, "Writing DSPEx Frame of Length " + frameLength);
             m_writer.Write(buffer, 0, frameLength);
-            Console.WriteLine("Wrote DSPEx Frame of Length " + frameLength);
+            Logger.L(LoggerLevel.Info, "Wrote DSPEx Frame of Length " + frameLength);
 
             ReturnFrameBuffer(buffer);
          }
       }
 
       // - Frame Processor Management -------------------------------------------------------------
-      private void AddFrameProcessor()
+      // TODO: This method should only be used by the constructor!
+      private void InitializeFrameProcessors(int threadCount)
       {
-         var instance = new DtpNodeSessionFrameProcessor(
-            m_node,
-            this,
-            (processor) => {
-               // Return the processor's frame buffer to the buffer pool
-               ReturnFrameBuffer(processor.ReleaseAssignedFrame());
+         var frameProcessors = Util.Generate(
+            threadCount,
+            (i) => new DtpNodeSessionFrameProcessor(
+               m_node,
+               this,
+               (processor, frame) => ReturnFrameBuffer(frame) 
+            ));
 
-               m_idleFrameProcessors.Add(processor);
-            } // lambda
-            );
-
-         lock (m_frameProcessorCollectionLock)
-            m_frameProcessors.Add(instance);
-         m_idleFrameProcessors.Add(instance); // innately thread safe due to collection type
+         m_frameProcessors = frameProcessors;
       }
 
       // - Frame Reader Utility Methods -----------------------------------------------------------

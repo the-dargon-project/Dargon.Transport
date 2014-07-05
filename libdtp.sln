@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItzWarty", "..\libwarty\Itz
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libdtp.Tests", "libdtp.Tests\libdtp.Tests.csproj", "{1740DA02-2AF7-4973-A52A-49F57DA943B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libdtp.DipNodeStandaloneIT", "libdtp.DipNodeStandaloneIT\libdtp.DipNodeStandaloneIT.csproj", "{515E75C9-CA2E-443C-B3E6-973025CF825D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,8 +63,23 @@ Global
 		{1740DA02-2AF7-4973-A52A-49F57DA943B3}.TempBuild|Any CPU.ActiveCfg = Release|Any CPU
 		{1740DA02-2AF7-4973-A52A-49F57DA943B3}.TempBuild|Any CPU.Build.0 = Release|Any CPU
 		{1740DA02-2AF7-4973-A52A-49F57DA943B3}.TempBuild|x86.ActiveCfg = Release|Any CPU
+		{515E75C9-CA2E-443C-B3E6-973025CF825D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{515E75C9-CA2E-443C-B3E6-973025CF825D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{515E75C9-CA2E-443C-B3E6-973025CF825D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{515E75C9-CA2E-443C-B3E6-973025CF825D}.DummyPlatform|Any CPU.ActiveCfg = Debug|Any CPU
+		{515E75C9-CA2E-443C-B3E6-973025CF825D}.DummyPlatform|Any CPU.Build.0 = Debug|Any CPU
+		{515E75C9-CA2E-443C-B3E6-973025CF825D}.DummyPlatform|x86.ActiveCfg = Debug|Any CPU
+		{515E75C9-CA2E-443C-B3E6-973025CF825D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{515E75C9-CA2E-443C-B3E6-973025CF825D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{515E75C9-CA2E-443C-B3E6-973025CF825D}.Release|x86.ActiveCfg = Release|Any CPU
+		{515E75C9-CA2E-443C-B3E6-973025CF825D}.TempBuild|Any CPU.ActiveCfg = Release|Any CPU
+		{515E75C9-CA2E-443C-B3E6-973025CF825D}.TempBuild|Any CPU.Build.0 = Release|Any CPU
+		{515E75C9-CA2E-443C-B3E6-973025CF825D}.TempBuild|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

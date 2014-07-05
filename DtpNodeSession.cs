@@ -64,8 +64,7 @@ namespace Dargon.Transport
          }
 
          // : Setup Frame Processors :
-         for (var i = 0; i < 2; i++)
-            AddFrameProcessor();
+         InitializeFrameProcessors(Environment.ProcessorCount);
       }
 
       // - m_locallyInitiatedUidSet Utility Methods -----------------------------------------------

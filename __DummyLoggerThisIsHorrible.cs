@@ -6,12 +6,16 @@ namespace Dargon.Transport
    {
       public static void L(LoggerLevel ll, params object[] herps)
       {
-         if (ll == LoggerLevel.Error)
-            Console.ForegroundColor = ConsoleColor.Red;
-         else if (ll == LoggerLevel.Info)
-            Console.ForegroundColor = ConsoleColor.Yellow;
-         foreach (var i in herps)
-            Console.WriteLine(herps);
+         if (false)
+         {
+            if (ll == LoggerLevel.Error)
+               Console.ForegroundColor = ConsoleColor.Red;
+            else if (ll == LoggerLevel.Info)
+               Console.ForegroundColor = ConsoleColor.Yellow;
+
+            foreach (var i in herps)
+               Console.WriteLine(herps);
+         }
       }
    }
 

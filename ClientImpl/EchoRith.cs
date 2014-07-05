@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Logger = Dargon.Transport.__DummyLoggerThisIsHorrible;
+
 namespace Dargon.Transport.ClientImpl
 {
    public class EchoRith : RemotelyInitializedTransactionHandler
@@ -23,7 +25,7 @@ namespace Dargon.Transport.ClientImpl
       public override void ProcessInitialMessage(IDSPExSession session, TransactionInitialMessage message)
       {
          // Echo the message's data
-         Console.WriteLine("Sending echo response of length " + message.DataLength);
+         Logger.L(LoggerLevel.Info, "Sending echo response of length " + message.DataLength);
          var response = new TransactionMessage(TransactionID, message.DataBuffer, message.DataOffset, message.DataLength);
          session.SendMessage(response);
          session.DeregisterRITransactionHandler(this);

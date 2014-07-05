@@ -4,6 +4,8 @@ using System.IO.Pipes;
 using System.Threading;
 using ItzWarty.Networking;
 
+using Logger = Dargon.Transport.__DummyLoggerThisIsHorrible;
+
 namespace Dargon.Transport
 {
    /// <summary>
@@ -59,7 +61,7 @@ namespace Dargon.Transport
                signalledOnWaitingForConnection = null;
             }
             connection.WaitForConnection();
-            Console.WriteLine("DSPEx Node got connection");
+            Logger.L(LoggerLevel.Info, "DSPEx Node got connection");
 
             var session = new DtpNodeSession(this, connection, DSPExNodeRole.Server);
             lock (m_sessionsLock)

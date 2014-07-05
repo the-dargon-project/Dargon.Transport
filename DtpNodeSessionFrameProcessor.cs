@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+
+using Logger = Dargon.Transport.__DummyLoggerThisIsHorrible;
 
 namespace Dargon.Transport
 {
@@ -9,17 +12,17 @@ namespace Dargon.Transport
    {
       private readonly DtpNode m_node;
       private readonly DtpNodeSession m_session;
-      private readonly Action<DtpNodeSessionFrameProcessor> m_onFrameProcessed;
+      private readonly Action<DtpNodeSessionFrameProcessor, byte[]> m_onFrameProcessed;
 
       private readonly Thread m_thread;
 
-      private readonly AutoResetEvent m_synchronization = new AutoResetEvent(false);
-      private byte[] m_assignedFrame = null;
+      private readonly Semaphore m_semaphore = new Semaphore(0, Int32.MaxValue);
+      private readonly ConcurrentQueue<byte[]> m_frameQueue = new ConcurrentQueue<byte[]>();
 
       public DtpNodeSessionFrameProcessor(
          DtpNode node, 
          DtpNodeSession session, 
-         Action<DtpNodeSessionFrameProcessor> onFrameProcessed)
+         Action<DtpNodeSessionFrameProcessor, byte[]> onFrameProcessed)
       {
          m_node = node;
          m_session = session;
@@ -33,17 +36,22 @@ namespace Dargon.Transport
          var id = Thread.CurrentThread.ManagedThreadId;
          while (m_node.IsAlive && m_session.IsAlive)
          {
-            if (!m_synchronization.WaitOne(10000)) continue;
-            Console.WriteLine("Frame Processor " + id + " got frame of buffer size " + m_assignedFrame.Length);
-            using (var ms = new MemoryStream(m_assignedFrame))
+            if (!m_semaphore.WaitOne(10000))
+               continue;
+
+            byte[] assignedFrame = null;
+            while (!m_frameQueue.TryDequeue(out assignedFrame)) ;
+
+            Logger.L(LoggerLevel.Info, "Frame Processor " + id + " got frame of buffer size " + assignedFrame.Length);
+            using (var ms = new MemoryStream(assignedFrame))
             using (var reader = new BinaryReader(ms))
             {
                UInt32 frameSize = reader.ReadUInt32();
                UInt32 transactionId = reader.ReadUInt32();
-               Console.WriteLine(" => Frame Size: " + frameSize);
+               Logger.L(LoggerLevel.Info, " => Frame Size: " + frameSize);
 
                bool isLit = m_session.IsLocallyInitializedTransaction(transactionId);
-               Console.WriteLine(" => Is LIT?: " + isLit);
+               Logger.L(LoggerLevel.Info, " => Is LIT?: " + isLit);
                if (isLit)
                {
                   var handler = m_session.GetLocallyInitializedTransactionHandler(transactionId);
@@ -53,8 +61,8 @@ namespace Dargon.Transport
                   handler.ProcessMessage(
                      m_session,
                      new TransactionMessage(
-                        transactionId, 
-                        m_assignedFrame, 
+                        transactionId,
+                        assignedFrame, 
                         8,
                         (int)(frameSize - 8)
                      )
@@ -62,20 +70,20 @@ namespace Dargon.Transport
                }
                else // riTransaction:
                {
-                  var opcode = frameSize > 8 ? m_assignedFrame[8] : (byte)0;
+                  var opcode = frameSize > 8 ? assignedFrame[8] : (byte)0;
 
                   // GoCRITH returns true if the handler was created, false if it existed
                   var handler = m_session.GetRemotelyInitializedTransactionHandler(transactionId, opcode);
                   if (handler == null)
                   {
-                     Console.WriteLine(" => Handler Nonexistant! Opcode: " + opcode);
+                     Logger.L(LoggerLevel.Info, " => Handler Nonexistant! Opcode: " + opcode);
                      handler = m_session.CreateAndRegisterRITransactionHandler(transactionId, opcode);
                      handler.ProcessInitialMessage(
                         m_session,
                         new TransactionInitialMessage(
                            transactionId,
                            opcode,
-                           m_assignedFrame,
+                           assignedFrame,
                            9,
                            (int)(frameSize - 9)
                         )
@@ -83,12 +91,12 @@ namespace Dargon.Transport
                   }
                   else
                   {
-                     Console.WriteLine(" => Handler Existant!");
+                     Logger.L(LoggerLevel.Info, " => Handler Existant!");
                      handler.ProcessMessage(
                         m_session,
                         new TransactionMessage(
                            transactionId,
-                           m_assignedFrame,
+                           assignedFrame,
                            8,
                            (int)(frameSize - 8)
                         )
@@ -96,24 +104,21 @@ namespace Dargon.Transport
                   }
                }
             } // using
-            m_onFrameProcessed(this);
+            m_onFrameProcessed(this, assignedFrame);
          } // while
       }
 
       /// <summary>
       /// Assigns the given frame content to this frame processor.
       /// </summary>
-      internal void AssignFrame(byte[] frame)
+      internal void EnqueueFrame(byte[] frame)
       {
-         m_assignedFrame = frame;
-         m_synchronization.Set();
-      }
+         if (frame == null)
+            throw new ArgumentNullException("frame");
 
-      public byte[] ReleaseAssignedFrame()
-      {
-         var temp = m_assignedFrame;
-         m_assignedFrame = null;
-         return temp;
+         m_frameQueue.Enqueue(frame);
+         Thread.MemoryBarrier();
+         m_semaphore.Release();
       }
    }
 }

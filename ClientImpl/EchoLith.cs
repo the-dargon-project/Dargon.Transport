@@ -49,7 +49,7 @@ namespace Dargon.Transport.ClientImpl
                RequestData.Length
             )
          );
-         System.Console.WriteLine("Sent Echo");
+         Logger.L(LoggerLevel.Info, "Sent Echo");
       }
 
       [DllImport("msvcrt.dll")]
