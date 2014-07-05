@@ -20,11 +20,11 @@ namespace Dargon.Transport.ClientImpl
       /// </summary>
       /// <param name="session"></param>
       /// <param name="message"></param>
-      public override void ProcessInitialMessage(IDSPExSession session, DSPExInitialMessage message)
+      public override void ProcessInitialMessage(IDSPExSession session, TransactionInitialMessage message)
       {
          // Echo the message's data
          Console.WriteLine("Sending echo response of length " + message.DataLength);
-         var response = new DSPExMessage(TransactionID, message.DataBuffer, message.DataOffset, message.DataLength);
+         var response = new TransactionMessage(TransactionID, message.DataBuffer, message.DataOffset, message.DataLength);
          session.SendMessage(response);
          session.DeregisterRITransactionHandler(this);
       }
@@ -34,7 +34,7 @@ namespace Dargon.Transport.ClientImpl
       /// </summary>
       /// <param name="session"></param>
       /// <param name="message"></param>
-      public override void ProcessMessage(IDSPExSession session, DSPExMessage message)
+      public override void ProcessMessage(IDSPExSession session, TransactionMessage message)
       {
          //Just eat the packet [do nothing]
       }

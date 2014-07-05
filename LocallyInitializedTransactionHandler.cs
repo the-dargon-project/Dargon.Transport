@@ -48,7 +48,7 @@ namespace Dargon.Transport
       /// <param name="message">
       /// The recieved DSPEx message which we are to process.
       /// </param>
-      public abstract void ProcessMessage(IDSPExSession session, DSPExMessage message);
+      public abstract void ProcessMessage(IDSPExSession session, TransactionMessage message);
 
       /// <summary>
       /// This method should be invoked when the transaction ends.

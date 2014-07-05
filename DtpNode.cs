@@ -9,7 +9,7 @@ namespace Dargon.Transport
    /// <summary>
    /// A node in a Dargon Service Protocol Extended graph
    /// </summary>
-   public class DSPExNode
+   public class DtpNode
    {
       private readonly DSPExNodeRole m_role;
       private readonly string m_defaultPipeName;
@@ -21,12 +21,12 @@ namespace Dargon.Transport
       private Thread m_serverThread;
 
       // : sessions : 
-      private List<DSPExNodeSession> m_sessions = new List<DSPExNodeSession>();
+      private List<DtpNodeSession> m_sessions = new List<DtpNodeSession>();
       private object m_sessionsLock = new object();
 
       private readonly List<IInstructionSet> m_instructionSets = new List<IInstructionSet>();
 
-      private DSPExNode(DSPExNodeRole role, string defaultPipeName, IEnumerable<IInstructionSet> instructionSets)
+      private DtpNode(DSPExNodeRole role, string defaultPipeName, IEnumerable<IInstructionSet> instructionSets)
       {
          m_role = role;
          m_defaultPipeName = defaultPipeName;
@@ -54,7 +54,7 @@ namespace Dargon.Transport
             connection.WaitForConnection();
             Console.WriteLine("DSPEx Node got connection");
 
-            var session = new DSPExNodeSession(this, connection, DSPExNodeRole.Server);
+            var session = new DtpNodeSession(this, connection, DSPExNodeRole.Server);
             lock (m_sessionsLock)
                m_sessions.Add(session);
          }
@@ -72,7 +72,7 @@ namespace Dargon.Transport
          var connection = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.WriteThrough);
          connection.Connect();
 
-         var session = new DSPExNodeSession(this, connection, DSPExNodeRole.Client);
+         var session = new DtpNodeSession(this, connection, DSPExNodeRole.Client);
          lock (m_sessionsLock)
             m_sessions.Add(session);
 
@@ -92,12 +92,12 @@ namespace Dargon.Transport
 
       // - Static Factory Methods -----------------------------------------------------------------
       // wtf?
-      public static DSPExNode CreateNode(
+      public static DtpNode CreateNode(
          DSPExNodeRole role, 
          string defaultPipeName = "dargon",
          IEnumerable<IInstructionSet> instructionSets = null)
       {
-         return new DSPExNode(role, defaultPipeName, instructionSets);
+         return new DtpNode(role, defaultPipeName, instructionSets);
       }
    }
 }

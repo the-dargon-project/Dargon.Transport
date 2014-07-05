@@ -41,7 +41,7 @@ namespace Dargon.Transport.ClientImpl
       public override void InitializeInteraction(IDSPExSession session)
       {
          session.SendMessage(
-            new DSPExInitialMessage(
+            new TransactionInitialMessage(
                TransactionId,
                (byte)DTPEx.C2S_ECHO,
                RequestData,
@@ -61,7 +61,7 @@ namespace Dargon.Transport.ClientImpl
       /// </summary>
       /// <param name="session"></param>
       /// <param name="message"></param>
-      public unsafe override void ProcessMessage(IDSPExSession session, DSPExMessage message)
+      public unsafe override void ProcessMessage(IDSPExSession session, TransactionMessage message)
       {
          bool match = RequestData.Length == message.DataLength;
 

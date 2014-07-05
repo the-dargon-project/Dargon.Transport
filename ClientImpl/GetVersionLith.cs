@@ -28,7 +28,7 @@ namespace Dargon.Transport.ClientImpl
       public override void InitializeInteraction(IDSPExSession session)
       {
          session.SendMessage(
-            new DSPExInitialMessage(
+            new TransactionInitialMessage(
                TransactionId,
                (byte)DTPEx.C2S_META_GET_DARGON_VERSION
             )
@@ -41,7 +41,7 @@ namespace Dargon.Transport.ClientImpl
       /// </summary>
       /// <param name="session"></param>
       /// <param name="message"></param>
-      public override void ProcessMessage(IDSPExSession session, DSPExMessage message)
+      public override void ProcessMessage(IDSPExSession session, TransactionMessage message)
       {
          ResponseData = message.DataBuffer.SubArray(message.DataOffset, message.DataLength);
          session.DeregisterLITransactionHandler(this);

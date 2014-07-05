@@ -24,7 +24,7 @@
       /// <summary>
       /// Handles the initial message (server-sent) which begins our transaction.
       /// </summary>
-      public abstract void ProcessInitialMessage(IDSPExSession session, DSPExInitialMessage message);
+      public abstract void ProcessInitialMessage(IDSPExSession session, TransactionInitialMessage message);
 
       /// <summary>
       /// Processes a message recieved from the remote endpoint
@@ -35,6 +35,6 @@
       /// <param name="message">
       /// The recieved DSPEx message which we are to process.
       /// </param>
-      public abstract void ProcessMessage(IDSPExSession session, DSPExMessage message);
+      public abstract void ProcessMessage(IDSPExSession session, TransactionMessage message);
    }
 }

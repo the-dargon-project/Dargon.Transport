@@ -5,21 +5,21 @@ using System.Threading;
 
 namespace Dargon.Transport
 {
-   public class DSPExNodeSessionFrameProcessor
+   public class DtpNodeSessionFrameProcessor
    {
-      private readonly DSPExNode m_node;
-      private readonly DSPExNodeSession m_session;
-      private readonly Action<DSPExNodeSessionFrameProcessor> m_onFrameProcessed;
+      private readonly DtpNode m_node;
+      private readonly DtpNodeSession m_session;
+      private readonly Action<DtpNodeSessionFrameProcessor> m_onFrameProcessed;
 
       private readonly Thread m_thread;
 
       private readonly AutoResetEvent m_synchronization = new AutoResetEvent(false);
       private byte[] m_assignedFrame = null;
 
-      public DSPExNodeSessionFrameProcessor(
-         DSPExNode node, 
-         DSPExNodeSession session, 
-         Action<DSPExNodeSessionFrameProcessor> onFrameProcessed)
+      public DtpNodeSessionFrameProcessor(
+         DtpNode node, 
+         DtpNodeSession session, 
+         Action<DtpNodeSessionFrameProcessor> onFrameProcessed)
       {
          m_node = node;
          m_session = session;
@@ -52,7 +52,7 @@ namespace Dargon.Transport
 
                   handler.ProcessMessage(
                      m_session,
-                     new DSPExMessage(
+                     new TransactionMessage(
                         transactionId, 
                         m_assignedFrame, 
                         8,
@@ -72,7 +72,7 @@ namespace Dargon.Transport
                      handler = m_session.CreateAndRegisterRITransactionHandler(transactionId, opcode);
                      handler.ProcessInitialMessage(
                         m_session,
-                        new DSPExInitialMessage(
+                        new TransactionInitialMessage(
                            transactionId,
                            opcode,
                            m_assignedFrame,
@@ -86,7 +86,7 @@ namespace Dargon.Transport
                      Console.WriteLine(" => Handler Existant!");
                      handler.ProcessMessage(
                         m_session,
-                        new DSPExMessage(
+                        new TransactionMessage(
                            transactionId,
                            m_assignedFrame,
                            8,

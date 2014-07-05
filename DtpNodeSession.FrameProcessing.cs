@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Dargon.Transport
 {
-   public unsafe partial class DSPExNodeSession
+   public unsafe partial class DtpNodeSession
    {
       // - Static Constants -----------------------------------------------------------------------
       private const uint kClientLitIdLow = 0x00000000U;
@@ -27,8 +27,8 @@ namespace Dargon.Transport
       private readonly BinaryReader m_reader;
       private readonly BinaryWriter m_writer;
 
-      private readonly BlockingCollection<DSPExNodeSessionFrameProcessor> m_idleFrameProcessors = new BlockingCollection<DSPExNodeSessionFrameProcessor>(new ConcurrentStack<DSPExNodeSessionFrameProcessor>());
-      private readonly List<DSPExNodeSessionFrameProcessor> m_frameProcessors = new List<DSPExNodeSessionFrameProcessor>();
+      private readonly BlockingCollection<DtpNodeSessionFrameProcessor> m_idleFrameProcessors = new BlockingCollection<DtpNodeSessionFrameProcessor>(new ConcurrentStack<DtpNodeSessionFrameProcessor>());
+      private readonly List<DtpNodeSessionFrameProcessor> m_frameProcessors = new List<DtpNodeSessionFrameProcessor>();
       private readonly object m_frameProcessorCollectionLock = new object(); // only for m_frameProcessors if we ever spin up new instances...
 
       // : Frame Reader : - Actually touched by reader, writer, and processors at the moment.
@@ -110,7 +110,7 @@ namespace Dargon.Transport
       // - Frame Processor Management -------------------------------------------------------------
       private void AddFrameProcessor()
       {
-         var instance = new DSPExNodeSessionFrameProcessor(
+         var instance = new DtpNodeSessionFrameProcessor(
             m_node,
             this,
             (processor) => {

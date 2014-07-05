@@ -62,7 +62,7 @@
       /// <param name="message">
       /// The initial message which we are sending.
       /// </param>
-      void SendMessage(DSPExInitialMessage message);
+      void SendMessage(TransactionInitialMessage message);
 
       /// <summary>
       /// Sends a DSPEx message.  This method must be called after DSPExInitialMessage is sent once.
@@ -72,6 +72,6 @@
       /// <param name="message">
       /// The message which we are sending.
       /// </param>
-      void SendMessage(DSPExMessage message);
+      void SendMessage(TransactionMessage message);
    }
 }

@@ -160,7 +160,7 @@ namespace Dargon.Transport
             if (m_locallyInitializedTransactions.ContainsKey(transactionId))
             {
                //Read the data of the message (No opcode at first byte)
-               var message = new DSPExMessage(transactionId, messageBuffer, 8, remainingByteCount);
+               var message = new TransactionMessage(transactionId, messageBuffer, 8, remainingByteCount);
                DumpToConsole(message);
 
                LocallyInitializedTransactionHandler transaction;
@@ -179,7 +179,7 @@ namespace Dargon.Transport
             if (m_remotelyInitializedTransactions.ContainsKey(transactionId))
             {
                //Read the data of the message (No opcode at first byte)
-               var message = new DSPExMessage(transactionId, messageBuffer, 8, remainingByteCount);
+               var message = new TransactionMessage(transactionId, messageBuffer, 8, remainingByteCount);
                DumpToConsole(message);
 
                RemotelyInitializedTransactionHandler transaction;
@@ -191,7 +191,7 @@ namespace Dargon.Transport
             {
                //We're starting a new transaction.  Read the opcode and then the data block.
                byte opcode = messageBuffer[8]; remainingByteCount--;
-               DSPExInitialMessage message = new DSPExInitialMessage(transactionId, opcode, messageBuffer, (int)(blockLength - remainingByteCount), remainingByteCount);
+               TransactionInitialMessage message = new TransactionInitialMessage(transactionId, opcode, messageBuffer, (int)(blockLength - remainingByteCount), remainingByteCount);
                DumpToConsole(message);
 
                RemotelyInitializedTransactionHandler transaction = CreateAndRegisterRITransactionHandler(transactionId, opcode);
@@ -325,7 +325,7 @@ namespace Dargon.Transport
       /// <param name="message">
       /// The DSPEx Initial message which we are sending over to the remote endpoint.
       /// </param>
-      public void SendMessage(DSPExInitialMessage message)
+      public void SendMessage(TransactionInitialMessage message)
       {
          if (!m_locallyInitializedTransactions.ContainsKey(message.TransactionId))
          {
@@ -363,7 +363,7 @@ namespace Dargon.Transport
       /// <param name="message">
       /// The DSPEx intermediate message which we are sending over to the remote endpoint.
       /// </param>
-      public void SendMessage(DSPExMessage message)
+      public void SendMessage(TransactionMessage message)
       {
          if (!m_locallyInitializedTransactions.ContainsKey(message.TransactionId) &&
              !m_remotelyInitializedTransactions.ContainsKey(message.TransactionId))
@@ -398,7 +398,7 @@ namespace Dargon.Transport
       /// Prints a dump of the given message to console
       /// </summary>
       /// <param name="message"></param>
-      private void DumpToConsole(DSPExMessage message)
+      private void DumpToConsole(TransactionMessage message)
       {
          if (!kDebugEnabled) return;
          Console.WriteLine("Transaction ID: " + message.TransactionId);
@@ -418,7 +418,7 @@ namespace Dargon.Transport
       /// Prints a dump of the given message to console
       /// </summary>
       /// <param name="message"></param>
-      private void DumpToConsole(DSPExInitialMessage message)
+      private void DumpToConsole(TransactionInitialMessage message)
       {
          if (!kDebugEnabled) return;
          Console.WriteLine("Transaction ID: " + message.TransactionId + " opcode " + message.Opcode);

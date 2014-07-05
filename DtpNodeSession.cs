@@ -12,9 +12,9 @@ namespace Dargon.Transport
    /// <summary>
    /// Represents a session between one DSPEx node and another DSPEx node.
    /// </summary>
-   public unsafe partial class DSPExNodeSession : IDSPExSession
+   public unsafe partial class DtpNodeSession : IDSPExSession
    {
-      private readonly DSPExNode m_node;
+      private readonly DtpNode m_node;
       private readonly DSPExNodeRole m_localRole;
 
       public bool IsAlive { get { return m_isAlive; } set { m_isAlive = value && m_isAlive; } }
@@ -34,7 +34,7 @@ namespace Dargon.Transport
       private readonly Dictionary<uint, RemotelyInitializedTransactionHandler> m_riTransactions = new Dictionary<uint, RemotelyInitializedTransactionHandler>();
       private readonly object m_riTransactionsLock = new object();
       
-      internal DSPExNodeSession(DSPExNode node, Stream connection, DSPExNodeRole localRole)
+      internal DtpNodeSession(DtpNode node, Stream connection, DSPExNodeRole localRole)
       {
          Trace.Assert(localRole.HasFlag(DSPExNodeRole.Client) != localRole.HasFlag(DSPExNodeRole.Server));
 
@@ -198,7 +198,7 @@ namespace Dargon.Transport
       [DllImport("msvcrt.dll", SetLastError = false, CallingConvention = CallingConvention.Cdecl)]
       static extern IntPtr memcpy(IntPtr dest, IntPtr src, int count);
 
-      public void SendMessage(DSPExInitialMessage message)
+      public void SendMessage(TransactionInitialMessage message)
       {
          // Ensure that we aren't going to run over memory
          if (message.DataBuffer.Length < message.DataOffset + message.DataLength)
@@ -226,7 +226,7 @@ namespace Dargon.Transport
          m_frameBuffersToSend.Add(frameBuffer);
       }
 
-      public void SendMessage(DSPExMessage message)
+      public void SendMessage(TransactionMessage message)
       {
          // Ensure that we aren't going to run over memory
          if (message.DataBuffer.Length < message.DataOffset + message.DataLength)
