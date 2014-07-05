@@ -4,7 +4,7 @@ using Logger = Dargon.Transport.__DummyLoggerThisIsHorrible;
 
 namespace Dargon.Transport.ClientImpl
 {
-   public class DSPExLITEchoHandler : DSPExLITransactionHandler
+   public class EchoLith : LocallyInitializedTransactionHandler
    {
       /// <summary>
       /// The request data which we originally send to the remote endpoint.
@@ -27,7 +27,7 @@ namespace Dargon.Transport.ClientImpl
       /// <param name="data">
       /// The data which we will send to the server in hopes of getting an identical response
       /// </param>
-      public DSPExLITEchoHandler(uint transactionId, byte[] data)
+      public EchoLith(uint transactionId, byte[] data)
          : base(transactionId)
       {
          RequestData = data;

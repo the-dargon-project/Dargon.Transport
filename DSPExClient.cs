@@ -76,12 +76,12 @@ namespace Dargon.Transport
       /// <summary>
       /// Pairs locally initialized transactions with their associated transaction handlers.  
       /// </summary>
-      private readonly Dictionary<uint, DSPExLITransactionHandler> m_locallyInitializedTransactions = new Dictionary<uint, DSPExLITransactionHandler>();
+      private readonly Dictionary<uint, LocallyInitializedTransactionHandler> m_locallyInitializedTransactions = new Dictionary<uint, LocallyInitializedTransactionHandler>();
 
       /// <summary>
       /// Pairs remotely initialized transactions with their associated transaction handlers.  
       /// </summary>
-      private readonly Dictionary<uint, DSPExRITransactionHandler> m_remotelyInitializedTransactions = new Dictionary<uint, DSPExRITransactionHandler>();
+      private readonly Dictionary<uint, RemotelyInitializedTransactionHandler> m_remotelyInitializedTransactions = new Dictionary<uint, RemotelyInitializedTransactionHandler>();
 
       /// <summary>
       /// The DSPEx Frame Transmitter which we are using to send frames to/from us and the remote
@@ -163,7 +163,7 @@ namespace Dargon.Transport
                var message = new DSPExMessage(transactionId, messageBuffer, 8, remainingByteCount);
                DumpToConsole(message);
 
-               DSPExLITransactionHandler transaction;
+               LocallyInitializedTransactionHandler transaction;
                lock(m_locallyInitializedTransactionLock)
                   transaction = m_locallyInitializedTransactions[transactionId];
                transaction.ProcessMessage(this, message);
@@ -182,7 +182,7 @@ namespace Dargon.Transport
                var message = new DSPExMessage(transactionId, messageBuffer, 8, remainingByteCount);
                DumpToConsole(message);
 
-               DSPExRITransactionHandler transaction;
+               RemotelyInitializedTransactionHandler transaction;
                lock(m_remotelyInitializedTransactionLock)
                   transaction = m_remotelyInitializedTransactions[transactionId];
                transaction.ProcessMessage(this, message);
@@ -194,7 +194,7 @@ namespace Dargon.Transport
                DSPExInitialMessage message = new DSPExInitialMessage(transactionId, opcode, messageBuffer, (int)(blockLength - remainingByteCount), remainingByteCount);
                DumpToConsole(message);
 
-               DSPExRITransactionHandler transaction = CreateAndRegisterRITransactionHandler(transactionId, opcode);
+               RemotelyInitializedTransactionHandler transaction = CreateAndRegisterRITransactionHandler(transactionId, opcode);
                transaction.ProcessInitialMessage(this, message);
             }
          }
@@ -209,7 +209,7 @@ namespace Dargon.Transport
       public bool Echo(byte[] data)
       {
          uint transactionId = m_locallyInitiatedUIDSet.TakeUniqueID();
-         var handler = new DSPExLITEchoHandler(transactionId, data);
+         var handler = new EchoLith(transactionId, data);
          RegisterAndInitializeLITransactionHandler(handler);
          handler.CompletionCountdownEvent.Wait();
          return handler.ResponseDataMatched;
@@ -224,7 +224,7 @@ namespace Dargon.Transport
       public byte[] GetDargonVersion()
       {
          uint transactionId = m_locallyInitiatedUIDSet.TakeUniqueID();
-         var handler = new DSPExLITGetDargonVersionHandler(transactionId);
+         var handler = new GetVersionLith(transactionId);
          RegisterAndInitializeLITransactionHandler(handler);
          handler.CompletionCountdownEvent.Wait();
 
@@ -246,9 +246,9 @@ namespace Dargon.Transport
       /// <returns>
       /// The transaction handler, or null if such a transaction handler doesn't exist
       /// </returns>
-      public DSPExRITransactionHandler CreateAndRegisterRITransactionHandler(uint transactionId, byte opcode)
+      public RemotelyInitializedTransactionHandler CreateAndRegisterRITransactionHandler(uint transactionId, byte opcode)
       {
-         DSPExRITransactionHandler riTh = (DSPExRITransactionHandler)Activator.CreateInstance(
+         RemotelyInitializedTransactionHandler riTh = (RemotelyInitializedTransactionHandler)Activator.CreateInstance(
             kDSPExOpcodeHandlers[(byte)opcode],
             transactionId
          );
@@ -266,7 +266,7 @@ namespace Dargon.Transport
       /// connection is closed.
       /// </summary>
       /// <param name="handler"></param>
-      public void DeregisterRITransactionHandler(DSPExRITransactionHandler handler)
+      public void DeregisterRITransactionHandler(RemotelyInitializedTransactionHandler handler)
       {
          lock(m_remotelyInitializedTransactionLock)
             m_remotelyInitializedTransactions.Remove(handler.TransactionID);
@@ -295,7 +295,7 @@ namespace Dargon.Transport
       /// <param name="th">
       /// The transaction handler which we are registering.
       /// </param>
-      public void RegisterAndInitializeLITransactionHandler(DSPExLITransactionHandler th)
+      public void RegisterAndInitializeLITransactionHandler(LocallyInitializedTransactionHandler th)
       {
          lock(m_locallyInitializedTransactionLock)
             m_locallyInitializedTransactions.Add(th.TransactionId, th);
@@ -310,7 +310,7 @@ namespace Dargon.Transport
       /// connection is closed.
       /// </summary>
       /// <param name="th"></param>
-      public void DeregisterLITransactionHandler(DSPExLITransactionHandler th)
+      public void DeregisterLITransactionHandler(LocallyInitializedTransactionHandler th)
       {
          lock (m_locallyInitializedTransactionLock)
             m_locallyInitializedTransactions.Remove(th.TransactionId);

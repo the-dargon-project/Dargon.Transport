@@ -28,10 +28,10 @@ namespace Dargon.Transport
       private readonly UniqueIdentificationSet m_locallyInitiatedUidSet;
       private readonly UniqueIdentificationSet m_remotelyInitiatedUidSet = new UniqueIdentificationSet(false);
 
-      private readonly Dictionary<uint, DSPExLITransactionHandler> m_liTransactions = new Dictionary<uint, DSPExLITransactionHandler>();
+      private readonly Dictionary<uint, LocallyInitializedTransactionHandler> m_liTransactions = new Dictionary<uint, LocallyInitializedTransactionHandler>();
       private readonly object m_liTransactionsLock = new object();
 
-      private readonly Dictionary<uint, DSPExRITransactionHandler> m_riTransactions = new Dictionary<uint, DSPExRITransactionHandler>();
+      private readonly Dictionary<uint, RemotelyInitializedTransactionHandler> m_riTransactions = new Dictionary<uint, RemotelyInitializedTransactionHandler>();
       private readonly object m_riTransactionsLock = new object();
       
       internal DSPExNodeSession(DSPExNode node, Stream connection, DSPExNodeRole localRole)
@@ -77,19 +77,19 @@ namespace Dargon.Transport
       }
 
       // - Frame Processor Utility Methods --------------------------------------------------------
-      public DSPExLITransactionHandler GetLocallyInitializedTransactionHandler(uint transactionId)
+      public LocallyInitializedTransactionHandler GetLocallyInitializedTransactionHandler(uint transactionId)
       {
-         DSPExLITransactionHandler handler;
+         LocallyInitializedTransactionHandler handler;
          lock (m_liTransactionsLock)
             m_liTransactions.TryGetValue(transactionId, out handler);
          return handler;
       }
 
-      public DSPExRITransactionHandler GetRemotelyInitializedTransactionHandler(
+      public RemotelyInitializedTransactionHandler GetRemotelyInitializedTransactionHandler(
          uint transactionId, 
          byte opcode)
       {
-         DSPExRITransactionHandler handler;
+         RemotelyInitializedTransactionHandler handler;
          lock (m_riTransactionsLock)
             m_riTransactions.TryGetValue(transactionId, out handler);
          return handler;
@@ -119,7 +119,7 @@ namespace Dargon.Transport
          m_instructionSets.Add(instructionSet);
       }
 
-      public void RegisterAndInitializeLITransactionHandler(DSPExLITransactionHandler th)
+      public void RegisterAndInitializeLITransactionHandler(LocallyInitializedTransactionHandler th)
       {
          lock (m_liTransactionsLock)
             m_liTransactions.Add(th.TransactionId, th);
@@ -127,7 +127,7 @@ namespace Dargon.Transport
          th.InitializeInteraction(this);
       }
 
-      public void DeregisterLITransactionHandler(DSPExLITransactionHandler th)
+      public void DeregisterLITransactionHandler(LocallyInitializedTransactionHandler th)
       {
          lock (m_liTransactionsLock)
          {
@@ -136,12 +136,12 @@ namespace Dargon.Transport
          }
       }
 
-      public DSPExRITransactionHandler CreateAndRegisterRITransactionHandler(
+      public RemotelyInitializedTransactionHandler CreateAndRegisterRITransactionHandler(
          uint transactionId, 
          byte opcode)
       {
 
-         DSPExRITransactionHandler riTh = null;
+         RemotelyInitializedTransactionHandler riTh = null;
          for (int i = 0; i < m_instructionSets.Count && riTh == null; i++)
          {
             var instructionSet = m_instructionSets[i];
@@ -150,14 +150,14 @@ namespace Dargon.Transport
             {
                if (!instructionSet.UseConstructionContext)
                {
-                  riTh = (DSPExRITransactionHandler)Activator.CreateInstance(
+                  riTh = (RemotelyInitializedTransactionHandler)Activator.CreateInstance(
                      handlerType,
                      transactionId
                   );
                }
                else
                {
-                  riTh = (DSPExRITransactionHandler)Activator.CreateInstance(
+                  riTh = (RemotelyInitializedTransactionHandler)Activator.CreateInstance(
                      handlerType,
                      transactionId,
                      instructionSet.ConstructionContext
@@ -171,7 +171,7 @@ namespace Dargon.Transport
             var handlerType = m_node.GetRITOpcodeHandlerType(opcode);
             if (handlerType != null)
             {
-               riTh = (DSPExRITransactionHandler)Activator.CreateInstance(
+               riTh = (RemotelyInitializedTransactionHandler)Activator.CreateInstance(
                   handlerType,
                   transactionId
                );
@@ -187,7 +187,7 @@ namespace Dargon.Transport
          return riTh;
       }
 
-      public void DeregisterRITransactionHandler(DSPExRITransactionHandler handler)
+      public void DeregisterRITransactionHandler(RemotelyInitializedTransactionHandler handler)
       {
          lock (m_riTransactionsLock)
             m_riTransactions.Remove(handler.TransactionID);

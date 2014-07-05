@@ -6,7 +6,7 @@ namespace Dargon.Transport
    /// Represents a client-initiated interaction which is initialized locally and sent to a remote
    /// DSP implementation.
    /// </summary>
-   public abstract class DSPExLITransactionHandler
+   public abstract class LocallyInitializedTransactionHandler
    {
       /// <summary>
       /// The transaction ID associated with this locally initialized transaction handler
@@ -29,7 +29,7 @@ namespace Dargon.Transport
       /// As we are a locally initialized transaction handler, you will likely have to get the
       /// transaction ID from the DSPManager.
       /// </param>
-      protected DSPExLITransactionHandler(uint transactionId)
+      protected LocallyInitializedTransactionHandler(uint transactionId)
       {
          this.TransactionId = transactionId;
       }

@@ -2,7 +2,7 @@
 
 namespace Dargon.Transport.ClientImpl
 {
-   public class DSPExLITGetDargonVersionHandler : DSPExLITransactionHandler
+   public class GetVersionLith : LocallyInitializedTransactionHandler
    {
       /// <summary>
       /// The response data sent to us by the remote endpoint.
@@ -16,7 +16,7 @@ namespace Dargon.Transport.ClientImpl
       /// <param name="transactionId">
       /// The id assigned to this DSPEx transaction
       /// </param>
-      public DSPExLITGetDargonVersionHandler(uint transactionId)
+      public GetVersionLith(uint transactionId)
          : base(transactionId)
       {
       }

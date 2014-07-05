@@ -18,7 +18,7 @@
       /// <param name="th">
       /// The transaction handler which we are registering.
       /// </param>
-      void RegisterAndInitializeLITransactionHandler(DSPExLITransactionHandler th);
+      void RegisterAndInitializeLITransactionHandler(LocallyInitializedTransactionHandler th);
 
       /// <summary>
       /// Deregisters the given locally initialized transaction handler, freeing its transaction id.
@@ -28,7 +28,7 @@
       /// connection is closed.
       /// </summary>
       /// <param name="th"></param>
-      void DeregisterLITransactionHandler(DSPExLITransactionHandler th);
+      void DeregisterLITransactionHandler(LocallyInitializedTransactionHandler th);
 
       /// <summary>
       /// Creates a remotely initialized transaction handler for the given opcode
@@ -42,7 +42,7 @@
       /// <returns>
       /// The transaction handler, or null if such a transaction handler doesn't exist
       /// </returns>
-      DSPExRITransactionHandler CreateAndRegisterRITransactionHandler(uint transactionId, byte opcode);
+      RemotelyInitializedTransactionHandler CreateAndRegisterRITransactionHandler(uint transactionId, byte opcode);
 
       /// <summary>
       /// Deregisters the remotely initialized transaction's handler, freeing its transaction id.
@@ -52,7 +52,7 @@
       /// connection is closed.
       /// </summary>
       /// <param name="handler"></param>
-      void DeregisterRITransactionHandler(DSPExRITransactionHandler handler);
+      void DeregisterRITransactionHandler(RemotelyInitializedTransactionHandler handler);
 
       /// <summary>
       /// Sends a DSPEX Initial message to the remote endpoint.  Before this method is called, 

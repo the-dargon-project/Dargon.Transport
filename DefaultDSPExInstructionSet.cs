@@ -17,7 +17,7 @@ namespace Dargon.Transport
       {
          switch ((DSPEx)opcode)
          {
-            case DSPEx.DSP_EX_C2S_ECHO: return typeof(DSPExRITEchoHandler);
+            case DSPEx.DSP_EX_C2S_ECHO: return typeof(EchoRith);
             default: return null;
          }
       }

@@ -4,7 +4,7 @@
    /// Represents a client-initiated interaction which is initialized remotely and sent to the
    /// local DSP implementation.
    /// </summary>
-   public abstract class DSPExRITransactionHandler
+   public abstract class RemotelyInitializedTransactionHandler
    {
       /// <summary>
       /// The Transaction ID associated with this transaction handler.
@@ -16,7 +16,7 @@
       /// transactionId.
       /// </summary>
       /// <param name="transactionId"></param>
-      protected DSPExRITransactionHandler(uint transactionId)
+      protected RemotelyInitializedTransactionHandler(uint transactionId)
       {
          this.TransactionID = transactionId;
       }

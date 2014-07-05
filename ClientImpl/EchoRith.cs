@@ -2,7 +2,7 @@
 
 namespace Dargon.Transport.ClientImpl
 {
-   public class DSPExRITEchoHandler : DSPExRITransactionHandler
+   public class EchoRith : RemotelyInitializedTransactionHandler
    {
       /// <summary>
       /// Initializes a new instance of a DSPExRITEchoHandler.
@@ -10,7 +10,7 @@ namespace Dargon.Transport.ClientImpl
       /// <param name="transactionId">
       /// The transaction id of new handler.
       /// </param>
-      public DSPExRITEchoHandler(uint transactionId)
+      public EchoRith(uint transactionId)
          : base(transactionId)
       {
       }
