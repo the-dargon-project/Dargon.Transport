@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Dargon.Transport;
+using Dargon.Transport.ClientImpl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace libdtp.Tests
@@ -7,17 +9,30 @@ namespace libdtp.Tests
    [TestClass]
    public class DtpNodeIT
    {
-      private DtpNode m_dtpNode;
+      private readonly const string pipeName = "DtpNodeIT";
+      private DtpNode m_daemonNode;
+      private DtpNode m_dimNode;
 
       [TestInitialize]
       public void Setup()
       {
-
+         m_daemonNode = DtpNode.CreateNode(true, pipeName);
+         m_dimNode = DtpNode.CreateNode(false, pipeName);
       }
 
       [TestMethod]
-      public void TestMethod1()
+      public void Run()
       {
+         var dimSession = m_dimNode.Connect();
+         var echoTransactions = new List<EchoLith>();
+         for (var i = 0; i < 10000; i++)
+         {
+            var echoTransaction = new EchoLith(dimSession.TakeLocallyInitializedTransactionId(), Guid.NewGuid().ToByteArray());
+            dimSession.RegisterAndInitializeLITransactionHandler(echoTransaction);
+            echoTransactions.Add(echoTransaction);
+         }
+         foreach(var echoTransaction in echoTransactions)
+            echoTransaction.CompletionCountdownEvent.Wait();
       }
    }
 }
