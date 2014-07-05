@@ -11,7 +11,7 @@ namespace Dargon.Transport
    /// </summary>
    public class DtpNode
    {
-      private readonly DSPExNodeRole m_role;
+      private readonly bool m_acceptIncomingConnections;
       private readonly string m_defaultPipeName;
 
       public bool IsAlive { get { return m_isAlive; } set { m_isAlive = value; } }
@@ -26,12 +26,12 @@ namespace Dargon.Transport
 
       private readonly List<IInstructionSet> m_instructionSets = new List<IInstructionSet>();
 
-      private DtpNode(DSPExNodeRole role, string defaultPipeName, IEnumerable<IInstructionSet> instructionSets)
+      private DtpNode(bool acceptIncomingConnections, string defaultPipeName, IEnumerable<IInstructionSet> instructionSets)
       {
-         m_role = role;
+         m_acceptIncomingConnections = acceptIncomingConnections;
          m_defaultPipeName = defaultPipeName;
 
-         if (role.HasFlag(DSPExNodeRole.Server))
+         if (acceptIncomingConnections)
          {
             m_serverThread = new Thread(ServerThreadStart);
             m_serverThread.Start();
@@ -93,11 +93,11 @@ namespace Dargon.Transport
       // - Static Factory Methods -----------------------------------------------------------------
       // wtf?
       public static DtpNode CreateNode(
-         DSPExNodeRole role, 
+         bool acceptIncomingConnections, 
          string defaultPipeName = "dargon",
          IEnumerable<IInstructionSet> instructionSets = null)
       {
-         return new DtpNode(role, defaultPipeName, instructionSets);
+         return new DtpNode(acceptIncomingConnections, defaultPipeName, instructionSets);
       }
    }
 }
