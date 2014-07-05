@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -26,13 +27,10 @@ namespace Dargon.Transport
 
       // Note: UIDSets are thread safe
       private readonly UniqueIdentificationSet m_locallyInitiatedUidSet;
-      private readonly UniqueIdentificationSet m_remotelyInitiatedUidSet = new UniqueIdentificationSet(false);
+      private readonly UniqueIdentificationSet m_remotelyInitiatedUidSet = new UniqueIdentificationSet(false); // TODO: Not really necessary
 
-      private readonly Dictionary<uint, LocallyInitializedTransactionHandler> m_liTransactions = new Dictionary<uint, LocallyInitializedTransactionHandler>();
-      private readonly object m_liTransactionsLock = new object();
-
-      private readonly Dictionary<uint, RemotelyInitializedTransactionHandler> m_riTransactions = new Dictionary<uint, RemotelyInitializedTransactionHandler>();
-      private readonly object m_riTransactionsLock = new object();
+      private readonly ConcurrentDictionary<uint, LocallyInitializedTransactionHandler> m_liTransactions = new ConcurrentDictionary<uint, LocallyInitializedTransactionHandler>();
+      private readonly ConcurrentDictionary<uint, RemotelyInitializedTransactionHandler> m_riTransactions = new ConcurrentDictionary<uint, RemotelyInitializedTransactionHandler>();
       
       internal DtpNodeSession(DtpNode node, Stream connection, DSPExNodeRole localRole)
       {
@@ -80,8 +78,7 @@ namespace Dargon.Transport
       public LocallyInitializedTransactionHandler GetLocallyInitializedTransactionHandler(uint transactionId)
       {
          LocallyInitializedTransactionHandler handler;
-         lock (m_liTransactionsLock)
-            m_liTransactions.TryGetValue(transactionId, out handler);
+         m_liTransactions.TryGetValue(transactionId, out handler);
          return handler;
       }
 
@@ -90,8 +87,7 @@ namespace Dargon.Transport
          byte opcode)
       {
          RemotelyInitializedTransactionHandler handler;
-         lock (m_riTransactionsLock)
-            m_riTransactions.TryGetValue(transactionId, out handler);
+         m_riTransactions.TryGetValue(transactionId, out handler);
          return handler;
       }
 
@@ -121,19 +117,20 @@ namespace Dargon.Transport
 
       public void RegisterAndInitializeLITransactionHandler(LocallyInitializedTransactionHandler th)
       {
-         lock (m_liTransactionsLock)
-            m_liTransactions.Add(th.TransactionId, th);
-
+         m_liTransactions.AddOrUpdate(th.TransactionId, th, (key, existingValue) => { throw new InvalidOperationException("TransactionID already existed!"); });
          th.InitializeInteraction(this);
       }
 
       public void DeregisterLITransactionHandler(LocallyInitializedTransactionHandler th)
       {
-         lock (m_liTransactionsLock)
-         {
-            m_locallyInitiatedUidSet.GiveUniqueID(th.TransactionId);
-            m_liTransactions.Remove(th.TransactionId);
-         }
+         LocallyInitializedTransactionHandler removedLith = null;
+         while(removedLith == null)
+            m_liTransactions.TryRemove(th.TransactionId, out removedLith);
+         Trace.Assert(removedLith == th);
+
+         Thread.MemoryBarrier();
+
+         m_locallyInitiatedUidSet.GiveUniqueID(th.TransactionId); // Thread Safe, goes after removal
       }
 
       public RemotelyInitializedTransactionHandler CreateAndRegisterRITransactionHandler(
@@ -182,15 +179,16 @@ namespace Dargon.Transport
             throw new KeyNotFoundException("No instruction set supported opcode " + opcode);
 
          // Register the RIT Handler
-         lock (m_riTransactionsLock)
-            m_riTransactions.Add(riTh.TransactionID, riTh);
+         m_riTransactions.AddOrUpdate(riTh.TransactionID, riTh, (key, existingValue) => { throw new InvalidOperationException("RITH TID already existed in concurrent dict!"); });
          return riTh;
       }
 
       public void DeregisterRITransactionHandler(RemotelyInitializedTransactionHandler handler)
       {
-         lock (m_riTransactionsLock)
-            m_riTransactions.Remove(handler.TransactionID);
+         RemotelyInitializedTransactionHandler removedRith = null;
+         while (removedRith == null)
+            m_riTransactions.TryRemove(handler.TransactionID, out removedRith);
+         Trace.Assert(handler == removedRith);
       }
 
       // - SendMessage ----------------------------------------------------------------------------

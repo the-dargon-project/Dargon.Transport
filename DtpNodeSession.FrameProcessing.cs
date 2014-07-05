@@ -44,12 +44,17 @@ namespace Dargon.Transport
       // Note: Frame Reader owns m_reader and can access it without a lock
       private void FrameReaderThreadStart()
       {
-         if (!m_dspExElevated)
+         if (m_localRole == DSPExNodeRole.Server)
          {
+            // Read dspex init elevation
             var opcode = m_reader.ReadByte();
             if (opcode != (byte)DTP.DSPEX_INIT)
                throw new NotSupportedException("Expected DSP_EX_INIT opcode!");
             m_dspExElevated = true;
+         }
+         else
+         {
+            m_dspExElevated = true; // performed at ctor
          }
 
          try

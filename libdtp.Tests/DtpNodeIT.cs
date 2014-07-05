@@ -9,7 +9,7 @@ namespace libdtp.Tests
    [TestClass]
    public class DtpNodeIT
    {
-      private readonly const string pipeName = "DtpNodeIT";
+      private const string pipeName = "DtpNodeIT";
       private DtpNode m_daemonNode;
       private DtpNode m_dimNode;
 
