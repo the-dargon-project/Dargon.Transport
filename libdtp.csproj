@@ -42,16 +42,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientImpl\DSPExLITEchoHandler.cs" />
-    <Compile Include="ClientImpl\DSPExLITGetDargonVersionHandler.cs" />
-    <Compile Include="ClientImpl\DSPExRITEchoHandler.cs" />
-    <Compile Include="DefaultDSPExInstructionSet.cs" />
+    <Compile Include="ClientImpl\EchoLith.cs" />
+    <Compile Include="ClientImpl\GetVersionLith.cs" />
+    <Compile Include="ClientImpl\EchoRith.cs" />
+    <Compile Include="DefaultInstructionSet.cs" />
     <Compile Include="DSP.cs" />
     <Compile Include="DSPConstants.cs" />
     <Compile Include="DSPEx.cs" />
     <Compile Include="DSPExClient.cs" />
     <Compile Include="DSPExInitialMessage.cs" />
-    <Compile Include="DSPExLITransactionHandler.cs" />
+    <Compile Include="LocallyInitializedTransactionHandler.cs" />
     <Compile Include="DSPExMessage.cs" />
     <Compile Include="DSPExNamedPipeFrameTransmitter.cs" />
     <Compile Include="DSPExNode.cs" />
@@ -61,7 +61,7 @@
     <Compile Include="DSPExNodeSession.FrameProcessing.cs" />
     <Compile Include="DSPExNodeSessionFrameProcessor.cs" />
     <Compile Include="DSPExRequestedAdditionalResourceInfoFlag.cs" />
-    <Compile Include="DSPExRITransactionHandler.cs" />
+    <Compile Include="RemotelyInitializedTransactionHandler.cs" />
     <Compile Include="DSPExTCPFrameTransmitter.cs" />
     <Compile Include="DSPExtensions.cs" />
     <Compile Include="IDSPExFrameTransmitter.cs" />
