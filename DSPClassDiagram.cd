@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Dargon.IO.DSP.DSPExNode">
+    <Position X="1" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAMAQIIAAAAAEAIIAAIACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\DSPExNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.ClientImpl.DSPExLITEchoHandler" Collapsed="true">
+    <Position X="2" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAEAEQAAAEAAAAAAQAAA=</HashCode>
+      <FileName>IO\DSP\ClientImpl\DSPExLITEchoHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.ClientImpl.DSPExLITGetBreadcrumbInfoHandler" Collapsed="true">
+    <Position X="5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAAAAAAAAAAAAAEQAAEEAgAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\ClientImpl\DSPExLITGetBreadcrumbInfoHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.ClientImpl.DSPExLITGetDargonVersionHandler" Collapsed="true">
+    <Position X="9.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAEAAgAAAAAAA=</HashCode>
+      <FileName>IO\DSP\ClientImpl\DSPExLITGetDargonVersionHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.ClientImpl.DSPExLITGetNodeInfoHandler" Collapsed="true">
+    <Position X="11.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAQAAAAAAAAAAAAgAAEAAAAEAgAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\ClientImpl\DSPExLITGetNodeInfoHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.ClientImpl.DSPExLITGetNodeInfosHandler" Collapsed="true">
+    <Position X="14" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAgAAAAAAAAAAEAAAAkAgAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\ClientImpl\DSPExLITGetNodeInfosHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.ClientImpl.DSPExLITGetResourceTreeRootInfoHandler" Collapsed="true">
+    <Position X="16.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAQAAAAEAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\ClientImpl\DSPExLITGetResourceTreeRootInfoHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.ClientImpl.DSPExLITGetResourceTreeRootInfosHandler" Collapsed="true">
+    <Position X="2.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAACAAEAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\ClientImpl\DSPExLITGetResourceTreeRootInfosHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.ClientImpl.DSPExLITListNodeChildrenHandler" Collapsed="true">
+    <Position X="7.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAQAAAAAAAAAAAAgAAEAAAAEAgAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\ClientImpl\DSPExLITListNodeChildrenHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.DSPConstants" Collapsed="true">
+    <Position X="18.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\DSPConstants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.DSPExClient" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="20.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAFAAAiAAIQmQESgAAAEAMAEAGAEgAQAAAAAGAAA=</HashCode>
+      <FileName>IO\DSP\DSPExClient.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Dargon.IO.DSP.DSPExInitialMessage" Collapsed="true">
+    <Position X="22.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAUAAAAAAAAACACAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>IO\DSP\DSPExInitialMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.DSPExLITransactionHandler" Collapsed="true">
+    <Position X="4" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAECAAAAAAAAAEAEAAEAAAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\DSPExLITransactionHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.DSPExMessage" Collapsed="true">
+    <Position X="24" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAUAAAAAAAAACACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\DSPExMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.DSPExNamedPipeFrameTransmitter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="18.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAFAQAAAAABAAAAAAEAAAAAAAAAAAABAAQAA=</HashCode>
+      <FileName>IO\DSP\DSPExNamedPipeFrameTransmitter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Dargon.IO.DSP.DSPExNodeResponseDescriptor" Collapsed="true">
+    <Position X="20.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>hwgAACDgAAAQkAAAAgAAAEiAAAAgQAQAABBAhAABAAA=</HashCode>
+      <FileName>IO\DSP\DSPExNodeResponseDescriptor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.DSPExNodeSession" BaseTypeListCollapsed="true">
+    <Position X="12.25" Y="5.75" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>gaKAiAAESBAAISIAgCAIAEAoFEQgCAQgAYgQYQYCAAA=</HashCode>
+      <FileName>IO\DSP\DSPExNodeSession.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Dargon.IO.DSP.DSPExNodeSessionFrameProcessor" Collapsed="true">
+    <Position X="24" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAgAAAABAAAAAAAQAAAAAAAAgAAEAAAgEAAE=</HashCode>
+      <FileName>IO\DSP\DSPExNodeSessionFrameProcessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.DSPExRITransactionHandler" Collapsed="true">
+    <Position X="18.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAEAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\DSPExRITransactionHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.DSPExTCPFrameTransmitter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="20.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAIAAFAAAAAAABAAAAAAEAAAAAAgAAAAgAAAAAA=</HashCode>
+      <FileName>IO\DSP\DSPExTCPFrameTransmitter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Dargon.IO.DSP.DSPExtensions" Collapsed="true">
+    <Position X="22.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAABAAAAAAAAAAIAAAAAAAEAQCACAAAAgAAIEQAAA=</HashCode>
+      <FileName>IO\DSP\DSPExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dargon.IO.DSP.Results.RootInfoResult" Collapsed="true">
+    <Position X="24" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAABAAgAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>IO\DSP\Results\RootInfoResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Dargon.IO.DSP.IDSPExFrameTransmitter" Collapsed="true">
+    <Position X="18.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\IDSPExFrameTransmitter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Dargon.IO.DSP.IDSPExGameContext" Collapsed="true">
+    <Position X="20.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\IDSPExGameContext.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Dargon.IO.DSP.IDSPExSession" Collapsed="true">
+    <Position X="22.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAACAAAAAAEAAAAAAAAQAAAAACAAA=</HashCode>
+      <FileName>IO\DSP\IDSPExSession.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Dargon.IO.DSP.IDSPSession" Collapsed="true">
+    <Position X="24" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAABgAAAIBgAAAAAAQBAAEUAgAAAQABAAAAA=</HashCode>
+      <FileName>IO\DSP\IDSPSession.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Dargon.IO.DSP.DSP" Collapsed="true">
+    <Position X="18.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAACgAUAQBAIAAAAAAEABAAAAAgAQAAAIAQAAAAAEAA=</HashCode>
+      <FileName>IO\DSP\DSP.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Dargon.IO.DSP.DSPEx" Collapsed="true">
+    <Position X="20.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QABgAAAQAAAAoAAAAABAAACBggIAAgAQEIlBIQAECAA=</HashCode>
+      <FileName>IO\DSP\DSPEx.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Dargon.IO.DSP.DSPExNodeRequestFlags" Collapsed="true">
+    <Position X="22.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACEAAAAAgAIAAAAEAAQAAAAAQAAAAIAAgAEAAAA=</HashCode>
+      <FileName>IO\DSP\DSPExNodeRequestFlags.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Dargon.IO.DSP.DSPExNodeRole" Collapsed="true">
+    <Position X="24" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAQ=</HashCode>
+      <FileName>IO\DSP\DSPExNodeRole.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Dargon.IO.DSP.DSPExRequestedAdditionalResourceInfoFlag" Collapsed="true">
+    <Position X="18.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IO\DSP\DSPExRequestedAdditionalResourceInfoFlag.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
