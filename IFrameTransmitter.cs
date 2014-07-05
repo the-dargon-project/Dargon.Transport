@@ -2,7 +2,7 @@
 
 namespace Dargon.Transport
 {
-   public interface IDSPExFrameTransmitter
+   public interface IFrameTransmitter
    {
       /// <summary>
       /// Begins receiving message frames.

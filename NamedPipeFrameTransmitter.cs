@@ -1,20 +1,16 @@
 ﻿using System;
 using System.IO;
-using System.Net.Sockets;
+using System.IO.Pipes;
+using System.ServiceModel.Channels;
 
 namespace Dargon.Transport
 {
-   public class DSPExTCPFrameTransmitter : IDSPExFrameTransmitter
+   public class NamedPipeFrameTransmitter : IFrameTransmitter
    {
       /// <summary>
-      /// The socket which is used for our DSP connection
+      /// The named pipe client stream associated with this frame transmitter.
       /// </summary>
-      private readonly Socket m_socket;
-
-      /// <summary>
-      /// The network stream associated with our socket
-      /// </summary>
-      private readonly NetworkStream m_networkStream;
+      private readonly NamedPipeClientStream m_stream;
 
       /// <summary>
       /// The binary writer which is used to write from to network stream
@@ -27,23 +23,28 @@ namespace Dargon.Transport
       private readonly byte[] m_inputBuffer = new byte[DTPConstants.kMaxMessageSize];
 
       /// <summary>
+      /// The buffer pool, which provides us input buffers for reading in messages.
+      /// </summary>
+      private readonly BufferManager m_bufferPool;
+
+      /// <summary>
       /// Initializes a new instance of a TCP Frame Transmitter for DSPEx
       /// </summary>
-      /// <param name="host">
-      /// The hostname which we are connecting to.
+      /// <param name="pipeName">
+      /// The name of the pipe which we are writing to
       /// </param>
-      /// <param name="port">
-      /// The port which we are connecting to.
-      /// </param>
-      public DSPExTCPFrameTransmitter(string host, int port)
+      public NamedPipeFrameTransmitter(string pipeName)
       {
-         m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-         m_socket.Connect(host, port);
-         m_networkStream = new NetworkStream(m_socket);
-         m_writer = new BinaryWriter(m_networkStream);
+         m_stream = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
+         m_stream.Connect();
+         m_writer = new BinaryWriter(m_stream);
 
          // Elevate to DSPEx - this blocks until the byte has been written to the underlying stream.
          m_writer.Write((byte)DTP.DSPEX_INIT);
+
+         m_bufferPool = BufferManager.CreateBufferManager(100000, DTPConstants.kMaxMessageSize);
+         for (int i = 0; i < 100; i++)
+            m_bufferPool.ReturnBuffer(new byte[DTPConstants.kMaxMessageSize]);
       }
 
       /// <summary>
@@ -69,10 +70,10 @@ namespace Dargon.Transport
       {
          StateObject so = new StateObject()
          {
-            buffer = m_inputBuffer,
+            buffer = m_bufferPool.TakeBuffer(DTPConstants.kMaxMessageSize),
             bytesRead = 0
          };
-         ContinueReceiveMessage(so, onFrameReceived);
+         ContinueReceiveLength(so, onFrameReceived);
       }
 
       /// <summary>
@@ -85,66 +86,66 @@ namespace Dargon.Transport
       /// <param name="onFrameReceived">
       /// This callback is invoked when a frame is received.
       /// </param>
-      private void ContinueReceiveMessage(StateObject so, Action<byte[]> onFrameReceived)
+      private void ContinueReceiveLength(StateObject so, Action<byte[]> onFrameReceived)
       {
-         bool readingLength = so.bytesRead < 4;
-         if (readingLength)
-         {
-            m_networkStream.BeginRead(
-               so.buffer,
-               so.bytesRead, 4 - so.bytesRead, //Read bytes of index [0, 3]
-               (asyncResult) =>
+
+         m_stream.BeginRead(
+            so.buffer,
+            so.bytesRead, 4 - so.bytesRead, //Read bytes of index [0, 3]
+            (asyncResult) => {
+               int bytesRead = m_stream.EndRead(asyncResult);
+               so.bytesRead += bytesRead;
+
+               // When we've read four bytes, we're done.
+               if (so.bytesRead == 4)
                {
-                  int bytesRead = m_networkStream.EndRead(asyncResult);
-                  so.bytesRead += bytesRead;
-
-                  // When we've read four bytes, we're done.
-                  if (so.bytesRead == 4)
-                  {
-                     so.bytesTotal = (int)BitConverter.ToUInt32(so.buffer, 0);
-                  }
-
-                  ContinueReceiveMessage(so, onFrameReceived);
-               },
-               null
-            );
-         }
-         else
-         {
-            m_networkStream.BeginRead(
-               so.buffer,
-               so.bytesRead, so.bytesTotal - so.bytesRead,
-               (eSecond) =>
+                  so.bytesTotal = (int)BitConverter.ToUInt32(so.buffer, 0);
+                  ContinueReceivePostLength(so, onFrameReceived);
+               }
+               else
                {
-                  int bytesRead = m_networkStream.EndRead(eSecond);
-                  so.bytesRead += bytesRead;
-
-                  if (so.bytesRead == so.bytesTotal)
-                  {
-                     onFrameReceived(so.buffer);
-                     BeginReceiveMessage(onFrameReceived);
-                  }
-                  else
-                  {
-                     ContinueReceiveMessage(so, onFrameReceived);
-                  }
-               },
-               null
-            );
-         }
+                  ContinueReceiveLength(so, onFrameReceived);
+               }
+            },
+            null
+         );
+      }
+      private void ContinueReceivePostLength(StateObject so, Action<byte[]> onFrameReceived)
+      {
+         m_stream.BeginRead(
+            so.buffer,
+            so.bytesRead, so.bytesTotal - so.bytesRead,
+            (eSecond) =>
+            {
+               int bytesRead = m_stream.EndRead(eSecond);
+               so.bytesRead += bytesRead;
+         
+               if (so.bytesRead == so.bytesTotal)
+               {
+                  BeginReceiveMessage(onFrameReceived);
+                  onFrameReceived(so.buffer);
+                  m_bufferPool.ReturnBuffer(so.buffer);
+               }
+               else
+               {
+                  ContinueReceivePostLength(so, onFrameReceived);
+               }
+            },
+            null
+         );
       }
 
       public void SendRawFrame(byte[] buffer, int offset, int size, Action onFrameSendComplete)
       {
-         m_networkStream.BeginWrite(
+         m_stream.BeginWrite(
             buffer,
             offset,
             (int)size,
             (s) => {
-               m_networkStream.EndWrite(s);
+               m_stream.EndWrite(s);
                onFrameSendComplete();
             },
-            m_networkStream
+            m_stream
          );
       }
 

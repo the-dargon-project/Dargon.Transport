@@ -87,7 +87,7 @@ namespace Dargon.Transport
       /// The DSPEx Frame Transmitter which we are using to send frames to/from us and the remote
       /// endpoint.
       /// </summary>
-      private readonly IDSPExFrameTransmitter m_frameTransmitter;
+      private readonly IFrameTransmitter m_frameTransmitter;
 
       /// <summary>
       /// Whether or not debug logging is enabled.
@@ -110,7 +110,7 @@ namespace Dargon.Transport
       {
          Terminated = false;
          m_outputBufferPool = BufferManager.CreateBufferManager(100, DTPConstants.kMaxMessageSize);
-         m_frameTransmitter = new DSPExTCPFrameTransmitter(host, port);
+         m_frameTransmitter = new TcpFrameTransmitter(host, port);
 
          // Begin our Asynchronous IO.
          m_frameTransmitter.BeginReceivingMessageFrames(RunDSPExIteration);
@@ -130,7 +130,7 @@ namespace Dargon.Transport
       {
          Terminated = false;
          m_outputBufferPool = BufferManager.CreateBufferManager(100, DTPConstants.kMaxMessageSize);
-         m_frameTransmitter = new DSPExNamedPipeFrameTransmitter(pipeName);
+         m_frameTransmitter = new NamedPipeFrameTransmitter(pipeName);
 
          // Begin our Asynchronous IO.
          m_frameTransmitter.BeginReceivingMessageFrames(RunDSPExIteration);
