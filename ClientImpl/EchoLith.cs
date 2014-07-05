@@ -43,7 +43,7 @@ namespace Dargon.Transport.ClientImpl
          session.SendMessage(
             new DSPExInitialMessage(
                TransactionId,
-               (byte)DSPEx.DSP_EX_C2S_ECHO,
+               (byte)DSPEx.C2S_ECHO,
                RequestData,
                0,
                RequestData.Length

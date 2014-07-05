@@ -40,7 +40,7 @@ namespace Dargon.Transport
          m_writer = new BinaryWriter(m_stream);
 
          // Elevate to DSPEx - this blocks until the byte has been written to the underlying stream.
-         m_writer.Write((byte)DSP.DSP_EX_INIT);
+         m_writer.Write((byte)DSP.DSPEX_INIT);
 
          m_bufferPool = BufferManager.CreateBufferManager(100000, DSPConstants.kMaxMessageSize);
          for (int i = 0; i < 100; i++)

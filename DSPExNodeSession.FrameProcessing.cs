@@ -47,7 +47,7 @@ namespace Dargon.Transport
          if (!m_dspExElevated)
          {
             var opcode = m_reader.ReadByte();
-            if (opcode != (byte)DSP.DSP_EX_INIT)
+            if (opcode != (byte)DSP.DSPEX_INIT)
                throw new NotSupportedException("Expected DSP_EX_INIT opcode!");
             m_dspExElevated = true;
          }

@@ -61,7 +61,7 @@ namespace Dargon.Transport
          // If we're the server, the DSP_EX_INIT opcode will be read by the frame reader thread.
          if (m_localRole == DSPExNodeRole.Client)
          {
-            m_writer.Write((byte)DSP.DSP_EX_INIT);
+            m_writer.Write((byte)DSP.DSPEX_INIT);
             m_dspExElevated = true;
          }
 

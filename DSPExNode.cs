@@ -37,7 +37,7 @@ namespace Dargon.Transport
             m_serverThread.Start();
          }
 
-         m_instructionSets.Add(new DefaultDSPExInstructionSet());
+         m_instructionSets.Add(new DefaultInstructionSet());
          if (instructionSets != null)
          {
             foreach (var instructionSet in instructionSets)

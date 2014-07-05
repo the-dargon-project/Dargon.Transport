@@ -3,7 +3,7 @@ using Dargon.Transport.ClientImpl;
 
 namespace Dargon.Transport
 {
-   public class DefaultDSPExInstructionSet : IDSPExInstructionSet
+   public class DefaultInstructionSet : IDSPExInstructionSet
    {
       public bool UseConstructionContext { get { return false; } }
 
@@ -17,7 +17,7 @@ namespace Dargon.Transport
       {
          switch ((DSPEx)opcode)
          {
-            case DSPEx.DSP_EX_C2S_ECHO: return typeof(EchoRith);
+            case DSPEx.C2S_ECHO: return typeof(EchoRith);
             default: return null;
          }
       }
