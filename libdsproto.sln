@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libdtransport", "libdtransport.csproj", "{C9F92566-1F94-4235-944C-19364459F9A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libdsproto", "libdsproto.csproj", "{C9F92566-1F94-4235-944C-19364459F9A6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItzWarty", "..\libwarty\ItzWarty.csproj", "{097B6B08-4034-408A-B3C0-A12E8F9E8893}"
 EndProject

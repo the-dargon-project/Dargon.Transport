@@ -47,7 +47,6 @@
     <Compile Include="ClientImpl\DSPExRITEchoHandler.cs" />
     <Compile Include="DefaultDSPExInstructionSet.cs" />
     <Compile Include="DSP.cs" />
-    <Compile Include="DSPClientHandler.cs" />
     <Compile Include="DSPConstants.cs" />
     <Compile Include="DSPEx.cs" />
     <Compile Include="DSPExClient.cs" />
@@ -66,7 +65,6 @@
     <Compile Include="DSPExTCPFrameTransmitter.cs" />
     <Compile Include="DSPExtensions.cs" />
     <Compile Include="IDSPExFrameTransmitter.cs" />
-    <Compile Include="IDSPExGameContext.cs" />
     <Compile Include="IDSPExInstructionSet.cs" />
     <Compile Include="IDSPExSession.cs" />
     <Compile Include="IDSPSession.cs" />
