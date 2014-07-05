@@ -8,7 +8,7 @@
       /// Adds a DSPEx Instruction set for handling remotely-initiated transactions.
       /// </summary>
       /// <param name="instructionSet"></param>
-      void AddInstructionSet(IDSPExInstructionSet instructionSet);
+      void AddInstructionSet(IInstructionSet instructionSet);
 
       /// <summary>
       /// Registers a locally initialized transaction handler so that future messages can be 

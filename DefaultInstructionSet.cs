@@ -3,12 +3,12 @@ using Dargon.Transport.ClientImpl;
 
 namespace Dargon.Transport
 {
-   public class DefaultInstructionSet : IDSPExInstructionSet
+   public class DefaultInstructionSet : IInstructionSet
    {
       public bool UseConstructionContext { get { return false; } }
 
       /// <summary>
-      /// <see cref="IDSPExInstructionSet.UseConstructionContext"/>
+      /// <see cref="IInstructionSet.UseConstructionContext"/>
       /// </summary>
       public object ConstructionContext { get { throw new InvalidOperationException("Construction Context unavailable"); } }
 

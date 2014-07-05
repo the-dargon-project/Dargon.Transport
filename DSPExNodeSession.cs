@@ -22,7 +22,7 @@ namespace Dargon.Transport
 
       // Instruction set assigned to this specific DSPEx instance.  
       // If a handler isn't found here, then a lookup occurs at the parent node
-      private List<IDSPExInstructionSet> m_instructionSets = new List<IDSPExInstructionSet>();
+      private List<IInstructionSet> m_instructionSets = new List<IInstructionSet>();
 
       // Note: UIDSets are thread safe
       private readonly UniqueIdentificationSet m_locallyInitiatedUidSet;
@@ -114,7 +114,7 @@ namespace Dargon.Transport
       /// Adds a DSPEx Instruction set for handling remotely-initiated transactions.
       /// </summary>
       /// <param name="instructionSet"></param>
-      public void AddInstructionSet(IDSPExInstructionSet instructionSet)
+      public void AddInstructionSet(IInstructionSet instructionSet)
       {
          m_instructionSets.Add(instructionSet);
       }

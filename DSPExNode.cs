@@ -24,9 +24,9 @@ namespace Dargon.Transport
       private List<DSPExNodeSession> m_sessions = new List<DSPExNodeSession>();
       private object m_sessionsLock = new object();
 
-      private readonly List<IDSPExInstructionSet> m_instructionSets = new List<IDSPExInstructionSet>();
+      private readonly List<IInstructionSet> m_instructionSets = new List<IInstructionSet>();
 
-      private DSPExNode(DSPExNodeRole role, string defaultPipeName, IEnumerable<IDSPExInstructionSet> instructionSets)
+      private DSPExNode(DSPExNodeRole role, string defaultPipeName, IEnumerable<IInstructionSet> instructionSets)
       {
          m_role = role;
          m_defaultPipeName = defaultPipeName;
@@ -95,7 +95,7 @@ namespace Dargon.Transport
       public static DSPExNode CreateNode(
          DSPExNodeRole role, 
          string defaultPipeName = "dargon",
-         IEnumerable<IDSPExInstructionSet> instructionSets = null)
+         IEnumerable<IInstructionSet> instructionSets = null)
       {
          return new DSPExNode(role, defaultPipeName, instructionSets);
       }

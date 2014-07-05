@@ -2,7 +2,7 @@
 
 namespace Dargon.Transport
 {
-   public interface IDSPExInstructionSet
+   public interface IInstructionSet
    {
       /// <summary>
       /// If set to true, any DSPExRITHandlers constructed with types returned from this class

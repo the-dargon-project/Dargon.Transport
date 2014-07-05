@@ -282,7 +282,7 @@ namespace Dargon.Transport
       /// Adds a DSPEx Instruction set for handling remotely-initiated transactions.
       /// </summary>
       /// <param name="instructionSet"></param>
-      public void AddInstructionSet(IDSPExInstructionSet instructionSet)
+      public void AddInstructionSet(IInstructionSet instructionSet)
       {
          throw new NotImplementedException("Use DSPExNode for this.");
       }
