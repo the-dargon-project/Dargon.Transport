@@ -6,17 +6,6 @@ namespace Dargon.Transport
 {
    public static class DSPExtensions
    {
-      /// <summary>
-      /// Writes a Dargon Service Protocol Node request flag set to the given binary writer.
-      /// </summary>
-      /// <param name="writer"></param>
-      /// <param name="flags">
-      /// The node request flags (this is usually sent from the DSP Client to the DSP server).
-      /// </param>
-      public static void Write(this BinaryWriter writer, DSPExNodeRequestFlags flags)
-      {
-         writer.Write((byte)flags);
-      }
 
       /// <summary>
       /// Writes the given tiny text to the binary writer.
@@ -67,18 +56,6 @@ namespace Dargon.Transport
          var content = Encoding.ASCII.GetBytes(s);
          writer.Write((uint)s.Length);
          writer.Write(content, 0, s.Length);
-      }
-
-      /// <summary>
-      /// Reads a Dargon Service Protocol Node request flag set from the given binary reader.
-      /// </summary>
-      /// <param name="reader"></param>
-      /// <returns>
-      /// The node request flags (this is usually sent from the DSP Client to the DSP server).
-      /// </returns>
-      public static DSPExNodeRequestFlags ReadNodeRequestFlags(this BinaryReader reader)
-      {
-         return (DSPExNodeRequestFlags)reader.ReadByte();
       }
 
       /// <summary>
