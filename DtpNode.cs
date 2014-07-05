@@ -74,9 +74,9 @@ namespace Dargon.Transport
       /// If null, connects to the default DSPEx pipe ("dargon" aka dargon daemon)
       /// </param>
       /// <returns></returns>
-      public IDSPExSession Connect(string pipeName = "dargon")
+      public IDSPExSession Connect(string pipeName = null)
       {
-         var connection = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.WriteThrough);
+         var connection = new NamedPipeClientStream(".", pipeName ?? m_defaultPipeName, PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.WriteThrough);
          connection.Connect();
 
          var session = new DtpNodeSession(this, connection, DSPExNodeRole.Client);
