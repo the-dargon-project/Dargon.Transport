@@ -10,7 +10,7 @@ using Logger = Dargon.Transport.__DummyLoggerThisIsHorrible;
 
 namespace Dargon.Transport
 {
-   public class DSPExClient : IDSPExSession
+   public class TransportClient : IDSPExSession
    {
       //-------------------------------------------------------------------------------------------
       // Static Implementation
@@ -24,7 +24,7 @@ namespace Dargon.Transport
       /// The static initializer for the DSPEx Client registers any Remotely Initialized 
       /// Transaction handlers.  
       /// </summary>
-      static DSPExClient()
+      static TransportClient()
       {
          //----------------------------------------------------------------------------------------
          // Register DSP Extended Opcode Handlers
@@ -106,10 +106,10 @@ namespace Dargon.Transport
       /// </summary>
       /// <param name="host">The hostname of the server to connect to</param>
       /// <param name="port">The port of the server to connect to</param>
-      public DSPExClient(string host, int port)
+      public TransportClient(string host, int port)
       {
          Terminated = false;
-         m_outputBufferPool = BufferManager.CreateBufferManager(100, DSPConstants.kMaxMessageSize);
+         m_outputBufferPool = BufferManager.CreateBufferManager(100, DTPConstants.kMaxMessageSize);
          m_frameTransmitter = new DSPExTCPFrameTransmitter(host, port);
 
          // Begin our Asynchronous IO.
@@ -126,10 +126,10 @@ namespace Dargon.Transport
       /// (Optional) The Dargon Service, which is responsible for supporting game-specific opcodes
       /// in the DSPEx.DSP_EX_GAME_OP range.
       /// </param>
-      public DSPExClient(string pipeName)
+      public TransportClient(string pipeName)
       {
          Terminated = false;
-         m_outputBufferPool = BufferManager.CreateBufferManager(100, DSPConstants.kMaxMessageSize);
+         m_outputBufferPool = BufferManager.CreateBufferManager(100, DTPConstants.kMaxMessageSize);
          m_frameTransmitter = new DSPExNamedPipeFrameTransmitter(pipeName);
 
          // Begin our Asynchronous IO.
@@ -333,7 +333,7 @@ namespace Dargon.Transport
          }
          else
          {
-            byte[] buffer = m_outputBufferPool.TakeBuffer(DSPConstants.kMaxMessageSize);
+            byte[] buffer = m_outputBufferPool.TakeBuffer(DTPConstants.kMaxMessageSize);
             using (MemoryStream ms = new MemoryStream(buffer) { Position = 0 })
             using (BinaryWriter br = new BinaryWriter(ms))
             {

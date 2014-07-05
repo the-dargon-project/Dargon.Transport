@@ -15,9 +15,9 @@ namespace Dargon.Transport
       public Type GetRemotelyInitializedTransactionHandlerType(
          byte opcode)
       {
-         switch ((DSPEx)opcode)
+         switch ((DTPEx)opcode)
          {
-            case DSPEx.C2S_ECHO: return typeof(EchoRith);
+            case DTPEx.C2S_ECHO: return typeof(EchoRith);
             default: return null;
          }
       }

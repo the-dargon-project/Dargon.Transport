@@ -3,7 +3,7 @@
    /// <summary>
    /// Dargon Service Protocol
    /// </summary>
-   public enum DSP : byte
+   public enum DTP : byte
    {
       //-------------------------------------------------------------------------------------------
       // Transaction Flow

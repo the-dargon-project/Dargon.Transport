@@ -20,7 +20,7 @@ namespace Dargon.Transport
       /// <summary>
       /// All input is stored into this input buffer.
       /// </summary>
-      private readonly byte[] m_inputBuffer = new byte[DSPConstants.kMaxMessageSize];
+      private readonly byte[] m_inputBuffer = new byte[DTPConstants.kMaxMessageSize];
 
       /// <summary>
       /// The buffer pool, which provides us input buffers for reading in messages.
@@ -40,11 +40,11 @@ namespace Dargon.Transport
          m_writer = new BinaryWriter(m_stream);
 
          // Elevate to DSPEx - this blocks until the byte has been written to the underlying stream.
-         m_writer.Write((byte)DSP.DSPEX_INIT);
+         m_writer.Write((byte)DTP.DSPEX_INIT);
 
-         m_bufferPool = BufferManager.CreateBufferManager(100000, DSPConstants.kMaxMessageSize);
+         m_bufferPool = BufferManager.CreateBufferManager(100000, DTPConstants.kMaxMessageSize);
          for (int i = 0; i < 100; i++)
-            m_bufferPool.ReturnBuffer(new byte[DSPConstants.kMaxMessageSize]);
+            m_bufferPool.ReturnBuffer(new byte[DTPConstants.kMaxMessageSize]);
       }
 
       /// <summary>
@@ -70,7 +70,7 @@ namespace Dargon.Transport
       {
          StateObject so = new StateObject()
          {
-            buffer = m_bufferPool.TakeBuffer(DSPConstants.kMaxMessageSize),
+            buffer = m_bufferPool.TakeBuffer(DTPConstants.kMaxMessageSize),
             bytesRead = 0
          };
          ContinueReceiveLength(so, onFrameReceived);

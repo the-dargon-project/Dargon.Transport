@@ -32,7 +32,7 @@ namespace Dargon.Transport
       private readonly object m_frameProcessorCollectionLock = new object(); // only for m_frameProcessors if we ever spin up new instances...
 
       // : Frame Reader : - Actually touched by reader, writer, and processors at the moment.
-      private readonly BufferManager m_frameBufferPool = BufferManager.CreateBufferManager(20, DSPConstants.kMaxMessageSize);
+      private readonly BufferManager m_frameBufferPool = BufferManager.CreateBufferManager(20, DTPConstants.kMaxMessageSize);
       private readonly object m_frameBufferPoolLock = new object();
 
       // : Frame Writer :
@@ -47,7 +47,7 @@ namespace Dargon.Transport
          if (!m_dspExElevated)
          {
             var opcode = m_reader.ReadByte();
-            if (opcode != (byte)DSP.DSPEX_INIT)
+            if (opcode != (byte)DTP.DSPEX_INIT)
                throw new NotSupportedException("Expected DSP_EX_INIT opcode!");
             m_dspExElevated = true;
          }

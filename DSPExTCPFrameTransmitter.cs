@@ -24,7 +24,7 @@ namespace Dargon.Transport
       /// <summary>
       /// All input is stored into this input buffer.
       /// </summary>
-      private readonly byte[] m_inputBuffer = new byte[DSPConstants.kMaxMessageSize];
+      private readonly byte[] m_inputBuffer = new byte[DTPConstants.kMaxMessageSize];
 
       /// <summary>
       /// Initializes a new instance of a TCP Frame Transmitter for DSPEx
@@ -43,7 +43,7 @@ namespace Dargon.Transport
          m_writer = new BinaryWriter(m_networkStream);
 
          // Elevate to DSPEx - this blocks until the byte has been written to the underlying stream.
-         m_writer.Write((byte)DSP.DSPEX_INIT);
+         m_writer.Write((byte)DTP.DSPEX_INIT);
       }
 
       /// <summary>

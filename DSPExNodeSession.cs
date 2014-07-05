@@ -61,7 +61,7 @@ namespace Dargon.Transport
          // If we're the server, the DSP_EX_INIT opcode will be read by the frame reader thread.
          if (m_localRole == DSPExNodeRole.Client)
          {
-            m_writer.Write((byte)DSP.DSPEX_INIT);
+            m_writer.Write((byte)DTP.DSPEX_INIT);
             m_dspExElevated = true;
          }
 
@@ -205,7 +205,7 @@ namespace Dargon.Transport
             throw new ArgumentException("DataOffset + DataLength > Message Buffer size");
          if (message.DataOffset < 0 || message.DataLength < 0)
             throw new ArgumentException("Either DataOffset or DataLength was negative");
-         if (message.DataLength + 4 + 4 + 1 > DSPConstants.kMaxMessageSize)
+         if (message.DataLength + 4 + 4 + 1 > DTPConstants.kMaxMessageSize)
             throw new ArgumentException("Frame (header + payload) was too big (> max size)");
 
          // Take frame buffer and copy contents to it
@@ -233,7 +233,7 @@ namespace Dargon.Transport
             throw new ArgumentException("DataOffset + DataLength > Message Buffer size");
          if (message.DataOffset < 0 || message.DataLength < 0)
             throw new ArgumentException("Either DataOffset or DataLength was negative");
-         if (message.DataLength + 4 + 4 > DSPConstants.kMaxMessageSize)
+         if (message.DataLength + 4 + 4 > DTPConstants.kMaxMessageSize)
             throw new ArgumentException("Frame (header + payload) was too big (> max size)");
 
          // Take frame buffer and copy contents to it

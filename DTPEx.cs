@@ -1,6 +1,6 @@
 ﻿namespace Dargon.Transport
 {
-   public enum DSPEx : byte
+   public enum DTPEx : byte
    {
       //-------------------------------------------------------------------------------------------
       // Transaction Flow

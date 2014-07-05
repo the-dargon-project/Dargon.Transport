@@ -46,10 +46,10 @@
     <Compile Include="ClientImpl\GetVersionLith.cs" />
     <Compile Include="ClientImpl\EchoRith.cs" />
     <Compile Include="DefaultInstructionSet.cs" />
-    <Compile Include="DSP.cs" />
-    <Compile Include="DSPConstants.cs" />
-    <Compile Include="DSPEx.cs" />
-    <Compile Include="DSPExClient.cs" />
+    <Compile Include="DTP.cs" />
+    <Compile Include="DTPConstants.cs" />
+    <Compile Include="DTPEx.cs" />
+    <Compile Include="TransportClient.cs" />
     <Compile Include="DSPExInitialMessage.cs" />
     <Compile Include="LocallyInitializedTransactionHandler.cs" />
     <Compile Include="DSPExMessage.cs" />
@@ -67,7 +67,6 @@
     <Compile Include="IDSPExFrameTransmitter.cs" />
     <Compile Include="IDSPExInstructionSet.cs" />
     <Compile Include="IDSPExSession.cs" />
-    <Compile Include="IDSPSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="__DummyLoggerThisIsHorrible.cs" />
   </ItemGroup>

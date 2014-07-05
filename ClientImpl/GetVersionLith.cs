@@ -30,7 +30,7 @@ namespace Dargon.Transport.ClientImpl
          session.SendMessage(
             new DSPExInitialMessage(
                TransactionId,
-               (byte)DSPEx.C2S_META_GET_DARGON_VERSION
+               (byte)DTPEx.C2S_META_GET_DARGON_VERSION
             )
          );
       }

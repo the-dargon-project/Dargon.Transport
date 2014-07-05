@@ -1,6 +1,6 @@
 ﻿namespace Dargon.Transport
 {
-   public static class DSPConstants
+   public static class DTPConstants
    {
       /// <summary>
       /// The maximum size of a DSP message.
