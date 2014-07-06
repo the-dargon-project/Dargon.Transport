@@ -161,7 +161,7 @@ namespace Dargon.Transport
             {
                //Read the data of the message (No opcode at first byte)
                var message = new TransactionMessage(transactionId, messageBuffer, 8, remainingByteCount);
-               DumpToConsole(message);
+               if(kDebugEnabled) message.DumpToConsole();
 
                LocallyInitializedTransactionHandler transaction;
                lock(m_locallyInitializedTransactionLock)
@@ -180,7 +180,7 @@ namespace Dargon.Transport
             {
                //Read the data of the message (No opcode at first byte)
                var message = new TransactionMessage(transactionId, messageBuffer, 8, remainingByteCount);
-               DumpToConsole(message);
+               if (kDebugEnabled) message.DumpToConsole();
 
                RemotelyInitializedTransactionHandler transaction;
                lock(m_remotelyInitializedTransactionLock)
@@ -192,7 +192,7 @@ namespace Dargon.Transport
                //We're starting a new transaction.  Read the opcode and then the data block.
                byte opcode = messageBuffer[8]; remainingByteCount--;
                TransactionInitialMessage message = new TransactionInitialMessage(transactionId, opcode, messageBuffer, (int)(blockLength - remainingByteCount), remainingByteCount);
-               DumpToConsole(message);
+               if(kDebugEnabled) message.DumpToConsole();
 
                RemotelyInitializedTransactionHandler transaction = CreateAndRegisterRITransactionHandler(transactionId, opcode);
                transaction.ProcessInitialMessage(this, message);
@@ -391,47 +391,6 @@ namespace Dargon.Transport
                );
             }
             ms.Close();
-         }
-      }
-
-      /// <summary>
-      /// Prints a dump of the given message to console
-      /// </summary>
-      /// <param name="message"></param>
-      private void DumpToConsole(TransactionMessage message)
-      {
-         if (!kDebugEnabled) return;
-         Console.WriteLine("Transaction ID: " + message.TransactionId);
-         for (int i = 0; i < message.DataLength; i += 16)
-         {
-            StringBuilder sb = new StringBuilder();
-            for (int offset = 0; offset < 16 && i + offset < message.DataLength; offset++)
-            {
-               sb.Append(message.DataBuffer[message.DataOffset + i + offset].ToString("X").PadLeft(2, '0'));
-               if (offset % 2 == 1)
-                  sb.Append(" ");
-            }
-            Console.WriteLine(sb.ToString());
-         }
-      }
-
-      /// Prints a dump of the given message to console
-      /// </summary>
-      /// <param name="message"></param>
-      private void DumpToConsole(TransactionInitialMessage message)
-      {
-         if (!kDebugEnabled) return;
-         Console.WriteLine("Transaction ID: " + message.TransactionId + " opcode " + message.Opcode);
-         for (int i = 0; i < message.DataLength; i += 16)
-         {
-            StringBuilder sb = new StringBuilder();
-            for (int offset = 0; offset < 16 && i + offset < message.DataLength; offset++)
-            {
-               sb.Append(message.DataBuffer[message.DataOffset + i + offset].ToString("X").PadLeft(2, '0'));
-               if (offset != 0 && offset % 2 == 0)
-                  sb.Append(" ");
-            }
-            Console.WriteLine(sb.ToString());
          }
       }
    }

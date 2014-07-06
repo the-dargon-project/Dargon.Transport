@@ -1,4 +1,7 @@
-﻿namespace Dargon.Transport
+﻿using System;
+using System.Text;
+
+namespace Dargon.Transport
 {
    /// <summary>
    /// After the initial DSPExInitialMessage message is sent, DSPExMessages are sent.  These
@@ -47,6 +50,22 @@
          DataBuffer = data;
          DataOffset = offset;
          DataLength = length;
+      }
+
+      public void DumpToConsole()
+      {
+         Console.WriteLine("Transaction ID: " + this.TransactionId);
+         for (int i = 0; i < this.DataLength; i += 16)
+         {
+            StringBuilder sb = new StringBuilder();
+            for (int offset = 0; offset < 16 && i + offset < this.DataLength; offset++)
+            {
+               sb.Append(this.DataBuffer[this.DataOffset + i + offset].ToString("X").PadLeft(2, '0'));
+               if (offset % 2 == 1)
+                  sb.Append(" ");
+            }
+            Console.WriteLine(sb.ToString());
+         }
       }
    }
 }

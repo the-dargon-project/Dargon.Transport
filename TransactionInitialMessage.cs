@@ -1,4 +1,7 @@
-﻿namespace Dargon.Transport
+﻿using System;
+using System.Text;
+
+namespace Dargon.Transport
 {
    /// <summary>
    /// DSP Interactions begin with a DSPExInitialMessage message being sent.  This message will
@@ -75,6 +78,22 @@
          DataBuffer = new byte[0];
          DataOffset = 0;
          DataLength = 0;
+      }
+
+      public void DumpToConsole()
+      {
+         Console.WriteLine("Transaction ID: " + this.TransactionId + " opcode " + this.Opcode);
+         for (int i = 0; i < this.DataLength; i += 16)
+         {
+            StringBuilder sb = new StringBuilder();
+            for (int offset = 0; offset < 16 && i + offset < this.DataLength; offset++)
+            {
+               sb.Append(this.DataBuffer[this.DataOffset + i + offset].ToString("X").PadLeft(2, '0'));
+               if (offset != 0 && offset % 2 == 0)
+                  sb.Append(" ");
+            }
+            Console.WriteLine(sb.ToString());
+         }
       }
    }
 }
