@@ -28,7 +28,7 @@ namespace Dargon.Transport
 
       private readonly List<IInstructionSet> m_instructionSets = new List<IInstructionSet>();
 
-      private DtpNode(bool acceptIncomingConnections, string defaultPipeName, IEnumerable<IInstructionSet> instructionSets)
+      protected DtpNode(bool acceptIncomingConnections, string defaultPipeName, IEnumerable<IInstructionSet> instructionSets)
       {
          m_acceptIncomingConnections = acceptIncomingConnections;
          m_defaultPipeName = defaultPipeName;
@@ -97,16 +97,6 @@ namespace Dargon.Transport
                return handlerType;
          }
          return null;
-      }
-
-      // - Static Factory Methods -----------------------------------------------------------------
-      // wtf?
-      public static DtpNode CreateNode(
-         bool acceptIncomingConnections, 
-         string defaultPipeName = "dargon",
-         IEnumerable<IInstructionSet> instructionSets = null)
-      {
-         return new DtpNode(acceptIncomingConnections, defaultPipeName, instructionSets);
       }
    }
 }

@@ -45,6 +45,7 @@
     <Compile Include="ClientImpl\EchoLith.cs" />
     <Compile Include="ClientImpl\GetVersionLith.cs" />
     <Compile Include="ClientImpl\EchoRith.cs" />
+    <Compile Include="DefaultDtpNodeFactory.cs" />
     <Compile Include="DefaultInstructionSet.cs" />
     <Compile Include="DTP.cs" />
     <Compile Include="DTPConstants.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="DtpNodeSession.cs" />
     <Compile Include="DtpNodeSession.FrameProcessing.cs" />
     <Compile Include="DtpNodeSessionFrameProcessor.cs" />
+    <Compile Include="IDtpNodeFactory.cs" />
     <Compile Include="TransactionInitialMessage.cs" />
     <Compile Include="TransactionMessage.cs" />
     <Compile Include="LocallyInitializedTransactionHandler.cs" />
