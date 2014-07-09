@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Pipes;
 using System.Threading;
+using ItzWarty.Collections;
 using ItzWarty.Networking;
 
 using Logger = Dargon.Transport.__DummyLoggerThisIsHorrible;
@@ -16,16 +17,9 @@ namespace Dargon.Transport
       private readonly bool m_acceptIncomingConnections;
       private readonly string m_defaultPipeName;
 
-      public bool IsAlive { get { return m_isAlive; } set { m_isAlive = value; } }
       private bool m_isAlive = true;
-
-      // : server :
-      private Thread m_serverThread;
-
-      // : sessions : 
-      private List<DtpNodeSession> m_sessions = new List<DtpNodeSession>();
-      private object m_sessionsLock = new object();
-
+      private readonly Thread m_serverThread;
+      private readonly ConcurrentSet<DtpNodeSession> m_sessions = new ConcurrentSet<DtpNodeSession>();
       private readonly List<IInstructionSet> m_instructionSets = new List<IInstructionSet>();
 
       protected DtpNode(bool acceptIncomingConnections, string defaultPipeName, IEnumerable<IInstructionSet> instructionSets)
@@ -64,8 +58,7 @@ namespace Dargon.Transport
             Logger.L(LoggerLevel.Info, "DSPEx Node got connection");
 
             var session = new DtpNodeSession(this, connection, DSPExNodeRole.Server);
-            lock (m_sessionsLock)
-               m_sessions.Add(session);
+            m_sessions.TryAdd(session);
          }
       }
 
@@ -82,8 +75,7 @@ namespace Dargon.Transport
          connection.Connect();
 
          var session = new DtpNodeSession(this, connection, DSPExNodeRole.Client);
-         lock (m_sessionsLock)
-            m_sessions.Add(session);
+         m_sessions.TryAdd(session);
 
          return session;
       }
@@ -98,5 +90,7 @@ namespace Dargon.Transport
          }
          return null;
       }
+
+      public bool IsAlive { get { return m_isAlive; } set { m_isAlive = value; } }
    }
 }
