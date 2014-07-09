@@ -22,7 +22,7 @@ namespace Dargon.Transport
       private readonly ConcurrentSet<DtpNodeSession> m_sessions = new ConcurrentSet<DtpNodeSession>();
       private readonly List<IInstructionSet> m_instructionSets = new List<IInstructionSet>();
 
-      protected DtpNode(bool acceptIncomingConnections, string defaultPipeName, IEnumerable<IInstructionSet> instructionSets)
+      protected internal DtpNode(bool acceptIncomingConnections, string defaultPipeName, IEnumerable<IInstructionSet> instructionSets)
       {
          m_acceptIncomingConnections = acceptIncomingConnections;
          m_defaultPipeName = defaultPipeName;

@@ -47,9 +47,8 @@
     <Compile Include="ClientImpl\EchoRith.cs" />
     <Compile Include="DefaultDtpNodeFactory.cs" />
     <Compile Include="DefaultInstructionSet.cs" />
-    <Compile Include="DTP.cs" />
     <Compile Include="DTPConstants.cs" />
-    <Compile Include="DTPEx.cs" />
+    <Compile Include="DTP.cs" />
     <Compile Include="DtpNode.cs" />
     <Compile Include="DtpNodeSession.cs" />
     <Compile Include="DtpNodeSession.FrameProcessing.cs" />

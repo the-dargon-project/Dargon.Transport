@@ -43,7 +43,7 @@ namespace Dargon.Transport.ClientImpl
          session.SendMessage(
             new TransactionInitialMessage(
                TransactionId,
-               (byte)DTPEx.C2S_ECHO,
+               (byte)DTP.ECHO,
                RequestData,
                0,
                RequestData.Length
