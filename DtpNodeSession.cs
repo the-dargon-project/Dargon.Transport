@@ -46,6 +46,9 @@ namespace Dargon.Transport
             m_locallyInitiatedUidSet = new UniqueIdentificationSet(kServerLitIdLow, kServerLitIdHigh);
 
          // - Setup Frame Processing --------------------------------------------------------------
+         // : Setup Frame Processors :
+         InitializeFrameProcessors(Environment.ProcessorCount);
+
          // : Setup Reader/Writer Workers :
          m_reader = new BinaryReader(m_connection, Encoding.Default, true);
          m_frameReaderThread = new Thread(FrameReaderThreadStart);
@@ -62,9 +65,6 @@ namespace Dargon.Transport
             m_writer.Write((byte)DTP.DSPEX_INIT);
             m_dspExElevated = true;
          }
-
-         // : Setup Frame Processors :
-         InitializeFrameProcessors(Environment.ProcessorCount);
       }
 
       // - m_locallyInitiatedUidSet Utility Methods -----------------------------------------------
