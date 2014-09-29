@@ -80,15 +80,14 @@ namespace Dargon.Transport
          return session;
       }
 
-      public Type GetRITOpcodeHandlerType(byte opcode)
+      public bool TryCreateRemotelyInitializedTransactionHandler(byte opcode, uint transactionId, out RemotelyInitializedTransactionHandler handler)
       {
-         foreach (var instructionSet in m_instructionSets)
-         {
-            var handlerType = instructionSet.GetRemotelyInitializedTransactionHandlerType(opcode);
-            if (handlerType != null)
-               return handlerType;
+         foreach (var instructionSet in m_instructionSets) {
+            if (instructionSet.TryCreateRemotelyInitializedTransactionHandler(opcode, transactionId, out handler))
+               return true;
          }
-         return null;
+         handler = null;
+         return false;
       }
 
       public bool IsAlive { get { return m_isAlive; } set { m_isAlive = value; } }

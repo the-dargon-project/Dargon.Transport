@@ -141,37 +141,12 @@ namespace Dargon.Transport
          for (int i = 0; i < m_instructionSets.Count && riTh == null; i++)
          {
             var instructionSet = m_instructionSets[i];
-            var handlerType = instructionSet.GetRemotelyInitializedTransactionHandlerType(opcode);
-            if (handlerType != null)
-            {
-               if (!instructionSet.UseConstructionContext)
-               {
-                  riTh = (RemotelyInitializedTransactionHandler)Activator.CreateInstance(
-                     handlerType,
-                     transactionId
-                  );
-               }
-               else
-               {
-                  riTh = (RemotelyInitializedTransactionHandler)Activator.CreateInstance(
-                     handlerType,
-                     transactionId,
-                     instructionSet.ConstructionContext
-                  );
-               }
-            }
+
+            instructionSet.TryCreateRemotelyInitializedTransactionHandler(opcode, transactionId, out riTh);
          }
 
-         if (riTh == null)
-         {
-            var handlerType = m_node.GetRITOpcodeHandlerType(opcode);
-            if (handlerType != null)
-            {
-               riTh = (RemotelyInitializedTransactionHandler)Activator.CreateInstance(
-                  handlerType,
-                  transactionId
-               );
-            }
+         if (riTh == null) {
+            m_node.TryCreateRemotelyInitializedTransactionHandler(opcode, transactionId, out riTh);
          }
 
          if (riTh == null)

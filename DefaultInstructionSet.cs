@@ -12,14 +12,16 @@ namespace Dargon.Transport
       /// </summary>
       public object ConstructionContext { get { throw new InvalidOperationException("Construction Context unavailable"); } }
 
-      public Type GetRemotelyInitializedTransactionHandlerType(
-         byte opcode)
+      public bool TryCreateRemotelyInitializedTransactionHandler(byte opcode, uint transactionId, out RemotelyInitializedTransactionHandler handler)
       {
+         handler = null;
          switch ((DTP)opcode)
          {
-            case DTP.ECHO: return typeof(EchoRith);
-            default: return null;
+            case DTP.ECHO: 
+               handler = new EchoRith(transactionId);
+               break;
          }
+         return handler != null;
       }
    }
 }

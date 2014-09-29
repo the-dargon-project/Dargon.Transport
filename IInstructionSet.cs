@@ -15,6 +15,6 @@ namespace Dargon.Transport
       /// </summary>
       object ConstructionContext { get; }
 
-      Type GetRemotelyInitializedTransactionHandlerType(byte opcode);
+      bool TryCreateRemotelyInitializedTransactionHandler(byte opcode, uint transactionId, out RemotelyInitializedTransactionHandler handler);
    }
 }
