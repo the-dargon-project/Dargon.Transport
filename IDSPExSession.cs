@@ -2,6 +2,8 @@
 {
    public interface IDSPExSession
    {
+      event ClientDisconnectedEventHandler Disconnected;
+
       uint TakeLocallyInitializedTransactionId();
 
       /// <summary>

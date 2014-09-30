@@ -95,7 +95,10 @@ namespace Dargon.Transport
          {
             // end of session
             IsAlive = false;
+            OnDisconnected(new ClientDisconnectedEventArgs(this));
             Console.WriteLine("Disconnected.");
+
+            Shutdown();
          }
       }
 
@@ -104,14 +107,17 @@ namespace Dargon.Transport
       {
          while (m_node.IsAlive && IsAlive)
          {
-            // used byte shifting rather than binaryreader/fixed as this is a fairly simple op...
-            var buffer = m_frameBuffersToSend.Take(); // Note: Buffer length != frame length!!!
-            int frameLength = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-            Logger.L(LoggerLevel.Info, "Writing DSPEx Frame of Length " + frameLength);
-            m_writer.Write(buffer, 0, frameLength);
-            Logger.L(LoggerLevel.Info, "Wrote DSPEx Frame of Length " + frameLength);
+            try {
+               // used byte shifting rather than binaryreader/fixed as this is a fairly simple op...
+               var buffer = m_frameBuffersToSend.Take(aliveCancellationToken); // Note: Buffer length != frame length!!!
+               int frameLength = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
+               Logger.L(LoggerLevel.Info, "Writing DSPEx Frame of Length " + frameLength);
+               m_writer.Write(buffer, 0, frameLength);
+               Logger.L(LoggerLevel.Info, "Wrote DSPEx Frame of Length " + frameLength);
 
-            ReturnFrameBuffer(buffer);
+               ReturnFrameBuffer(buffer);
+            }
+            catch (OperationCanceledException) { }
          }
       }
 

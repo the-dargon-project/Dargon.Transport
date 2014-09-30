@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Pipes;
 using System.Threading;
+using System.Threading.Tasks;
 using ItzWarty.Collections;
 using ItzWarty.Networking;
 
@@ -21,6 +22,10 @@ namespace Dargon.Transport
       private readonly Thread m_serverThread;
       private readonly ConcurrentSet<DtpNodeSession> m_sessions = new ConcurrentSet<DtpNodeSession>();
       private readonly List<IInstructionSet> m_instructionSets = new List<IInstructionSet>();
+
+      private readonly Semaphore acceptThreadSynchronization = new Semaphore(0, int.MaxValue);
+
+      public event ClientConnectedEventHandler ClientConnected;
 
       protected internal DtpNode(bool acceptIncomingConnections, string defaultPipeName, IEnumerable<IInstructionSet> instructionSets)
       {
@@ -54,11 +59,23 @@ namespace Dargon.Transport
                signalledOnWaitingForConnection.Signal();
                signalledOnWaitingForConnection = null;
             }
-            connection.WaitForConnection();
-            Logger.L(LoggerLevel.Info, "DSPEx Node got connection");
+            var asyncResult = connection.BeginWaitForConnection(ar => acceptThreadSynchronization.Release(1), null);
+            acceptThreadSynchronization.WaitOne();
+            Console.WriteLine("Past acceptThreadSynchronization!");
 
-            var session = new DtpNodeSession(this, connection, DSPExNodeRole.Server);
-            m_sessions.TryAdd(session);
+            if (asyncResult.IsCompleted) {
+               connection.EndWaitForConnection(asyncResult);
+
+               Logger.L(LoggerLevel.Info, "DSPEx Node got connection");
+
+               var session = new DtpNodeSession(this, connection, DSPExNodeRole.Server);
+               m_sessions.TryAdd(session);
+
+               OnClientConnected(new ClientConnectedEventArgs(session));
+            } else {
+               connection.Dispose();
+               pipeHandle.Dispose();
+            }
          }
       }
 
@@ -91,5 +108,17 @@ namespace Dargon.Transport
       }
 
       public bool IsAlive { get { return m_isAlive; } set { m_isAlive = value; } }
+
+      protected virtual void OnClientConnected(ClientConnectedEventArgs e)
+      {
+         ClientConnectedEventHandler handler = ClientConnected;
+         if (handler != null) handler(this, e);
+      }
+
+      public void Shutdown()
+      {
+         m_isAlive = false;
+         acceptThreadSynchronization.Release();
+      }
    }
 }

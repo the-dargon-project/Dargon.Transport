@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientConnectedEventArgs.cs" />
+    <Compile Include="ClientDisconnectedEventArgs.cs" />
     <Compile Include="ClientImpl\EchoLith.cs" />
     <Compile Include="ClientImpl\GetVersionLith.cs" />
     <Compile Include="ClientImpl\EchoRith.cs" />

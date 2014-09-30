@@ -20,6 +20,8 @@ namespace Dargon.Transport
 
       public bool IsAlive { get { return m_isAlive; } set { m_isAlive = value && m_isAlive; } }
       private bool m_isAlive = true;
+      private readonly CancellationTokenSource aliveCancellationTokenSource = new CancellationTokenSource();
+      private readonly CancellationToken aliveCancellationToken;
 
       // Instruction set assigned to this specific DSPEx instance.  
       // If a handler isn't found here, then a lookup occurs at the parent node
@@ -31,10 +33,14 @@ namespace Dargon.Transport
 
       private readonly ConcurrentDictionary<uint, LocallyInitializedTransactionHandler> m_liTransactions = new ConcurrentDictionary<uint, LocallyInitializedTransactionHandler>();
       private readonly ConcurrentDictionary<uint, RemotelyInitializedTransactionHandler> m_riTransactions = new ConcurrentDictionary<uint, RemotelyInitializedTransactionHandler>();
-      
+
+      public event ClientDisconnectedEventHandler Disconnected;
+
       internal DtpNodeSession(DtpNode node, Stream connection, DSPExNodeRole localRole)
       {
          Trace.Assert(localRole.HasFlag(DSPExNodeRole.Client) != localRole.HasFlag(DSPExNodeRole.Server));
+
+         aliveCancellationToken = aliveCancellationTokenSource.Token;
 
          m_node = node;
          m_connection = connection;
@@ -224,5 +230,13 @@ namespace Dargon.Transport
          }
          m_frameBuffersToSend.Add(frameBuffer);
       }
+
+      protected virtual void OnDisconnected(ClientDisconnectedEventArgs e)
+      {
+         ClientDisconnectedEventHandler handler = Disconnected;
+         if (handler != null) handler(this, e);
+      }
+
+      private void Shutdown() { m_isAlive = false; aliveCancellationTokenSource.Cancel(); }
    }
 }
