@@ -8,6 +8,6 @@ namespace Dargon.Transport
 {
    public interface IDtpNodeFactory
    {
-      DtpNode CreateNode(bool acceptIncomingConnections, string defaultPipeName = "dargon", IEnumerable<IInstructionSet> instructionSets = null);
+      IDtpNode CreateNode(bool acceptIncomingConnections, string defaultPipeName = "dargon", IEnumerable<IInstructionSet> instructionSets = null);
    }
 }

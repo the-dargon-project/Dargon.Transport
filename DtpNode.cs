@@ -13,7 +13,7 @@ namespace Dargon.Transport
    /// <summary>
    /// A node in a Dargon Service Protocol Extended graph
    /// </summary>
-   public class DtpNode
+   public class DtpNode : IDtpNode
    {
       private readonly bool m_acceptIncomingConnections;
       private readonly string m_defaultPipeName;
