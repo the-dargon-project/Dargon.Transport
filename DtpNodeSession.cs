@@ -211,8 +211,8 @@ namespace Dargon.Transport
             throw new ArgumentException("DataOffset + DataLength > Message Buffer size");
          if (message.DataOffset < 0 || message.DataLength < 0)
             throw new ArgumentException("Either DataOffset or DataLength was negative");
-         if (message.DataLength + 4 + 4 > DTPConstants.kMaxMessageSize)
-            throw new ArgumentException("Frame (header + payload) was too big (> max size)");
+//         if (message.DataLength + 4 + 4 > DTPConstants.kMaxMessageSize)
+//            throw new ArgumentException("Frame (header + payload) was too big (> max size)");
 
          // Take frame buffer and copy contents to it
          int frameSize = 4 + 4 + message.DataLength;
