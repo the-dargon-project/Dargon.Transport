@@ -59,7 +59,6 @@ namespace Dargon.Transport
 
          try
          {
-            int frameProcessorRoundRobinIndex = 0;
             while (m_node.IsAlive && IsAlive)
             {
                var frameLength = m_reader.ReadUInt32(); // includes frameLength
@@ -84,10 +83,9 @@ namespace Dargon.Transport
                //   Console.WriteLine(i + ": " + buffer[i].ToString());
 
                Logger.L(LoggerLevel.Info, "Sending DSPEx Frame of Length " + frameLength + " to processor");
-               var index = frameProcessorRoundRobinIndex;
-               var processor = m_frameProcessors[frameProcessorRoundRobinIndex];
+               var index = BitConverter.ToUInt32(buffer, 4) % m_frameProcessors.Length;
+               var processor = m_frameProcessors[index];
                processor.EnqueueFrame(buffer);
-               frameProcessorRoundRobinIndex = (index + 1) % m_frameProcessors.Length;
                Logger.L(LoggerLevel.Info, "Sent DSPEx Frame of Length " + frameLength + " to processor");
             }
          }
