@@ -16,7 +16,7 @@ namespace Dargon.Transport
    public unsafe partial class DtpNodeSession : IDSPExSession
    {
       private readonly DtpNode m_node;
-      private readonly DSPExNodeRole m_localRole;
+      private readonly NodeRole m_localRole;
 
       public bool IsAlive { get { return m_isAlive; } set { m_isAlive = value && m_isAlive; } }
       private bool m_isAlive = true;
@@ -36,9 +36,9 @@ namespace Dargon.Transport
 
       public event ClientDisconnectedEventHandler Disconnected;
 
-      internal DtpNodeSession(DtpNode node, Stream connection, DSPExNodeRole localRole)
+      internal DtpNodeSession(DtpNode node, Stream connection, NodeRole localRole)
       {
-         Trace.Assert(localRole.HasFlag(DSPExNodeRole.Client) != localRole.HasFlag(DSPExNodeRole.Server));
+         Trace.Assert(localRole.HasFlag(NodeRole.Client) != localRole.HasFlag(NodeRole.Server));
 
          aliveCancellationToken = aliveCancellationTokenSource.Token;
 
@@ -46,7 +46,7 @@ namespace Dargon.Transport
          m_connection = connection;
          m_localRole = localRole;
 
-         if (m_localRole == DSPExNodeRole.Client)
+         if (m_localRole == NodeRole.Client)
             m_locallyInitiatedUidSet = new UniqueIdentificationSet(kClientLitIdLow, kClientLitIdHigh);
          else // Server
             m_locallyInitiatedUidSet = new UniqueIdentificationSet(kServerLitIdLow, kServerLitIdHigh);
@@ -66,7 +66,7 @@ namespace Dargon.Transport
 
          // If we're the client, Send DSP_EX_INIT to elevate from DSP to DSPEx
          // If we're the server, the DSP_EX_INIT opcode will be read by the frame reader thread.
-         if (m_localRole == DSPExNodeRole.Client)
+         if (m_localRole == NodeRole.Client)
          {
             m_writer.Write((byte)DTP.DSPEX_INIT);
             m_dspExElevated = true;
@@ -97,12 +97,12 @@ namespace Dargon.Transport
       }
 
       // - Utility Methods ------------------------------------------------------------------------
-      internal DSPExNodeRole GetTransactionOrigin(UInt32 transactionId) 
+      internal NodeRole GetTransactionOrigin(UInt32 transactionId) 
       {
          if ((transactionId >> 31) == 0x00) // low TID = client
-            return DSPExNodeRole.Client;
+            return NodeRole.Client;
          else
-            return DSPExNodeRole.Server;
+            return NodeRole.Server;
       }
 
       internal bool IsLocallyInitializedTransaction(UInt32 transactionId) 

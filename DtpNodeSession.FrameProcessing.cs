@@ -44,7 +44,7 @@ namespace Dargon.Transport
       // Note: Frame Reader owns m_reader and can access it without a lock
       private void FrameReaderThreadStart()
       {
-         if (m_localRole == DSPExNodeRole.Server)
+         if (m_localRole == NodeRole.Server)
          {
             // Read dspex init elevation
             var opcode = m_reader.ReadByte();

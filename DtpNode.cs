@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Pipes;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using ItzWarty.Collections;
@@ -15,31 +18,17 @@ namespace Dargon.Transport
    /// </summary>
    public class DtpNode : IDtpNode
    {
-      private readonly bool m_acceptIncomingConnections;
-      private readonly string m_defaultPipeName;
-
-      private bool m_isAlive = true;
-      private readonly Thread m_serverThread;
+      private readonly IClientSource clientSource;
       private readonly ConcurrentSet<DtpNodeSession> m_sessions = new ConcurrentSet<DtpNodeSession>();
       private readonly List<IInstructionSet> m_instructionSets = new List<IInstructionSet>();
-
-      private readonly Semaphore acceptThreadSynchronization = new Semaphore(0, int.MaxValue);
+      private bool m_isAlive = true;
 
       public event ClientConnectedEventHandler ClientConnected;
 
-      protected internal DtpNode(bool acceptIncomingConnections, string defaultPipeName, IEnumerable<IInstructionSet> instructionSets)
+      protected internal DtpNode(IClientSource clientSource, IEnumerable<IInstructionSet> instructionSets)
       {
-         m_acceptIncomingConnections = acceptIncomingConnections;
-         m_defaultPipeName = defaultPipeName;
-
-         if (acceptIncomingConnections)
-         {
-            var signalledOnWaitingForConnection = new CountdownEvent(1);
-            m_serverThread = new Thread(delegate() { ServerThreadStart(signalledOnWaitingForConnection); });
-            m_serverThread.Start();
-            signalledOnWaitingForConnection.Wait();
-         }
-
+         this.clientSource = clientSource;
+         clientSource.SetAcceptCallback(AcceptCallback);
          m_instructionSets.Add(new DefaultInstructionSet());
          if (instructionSets != null)
          {
@@ -47,36 +36,12 @@ namespace Dargon.Transport
                m_instructionSets.Add(instructionSet);
          }
       }
-      
-      private void ServerThreadStart(CountdownEvent signalledOnWaitingForConnection)
+
+      private void AcceptCallback(Stream stream)
       {
-         while (m_isAlive)
-         {
-            var pipeHandle = LowIntegrityPipeFactory.CreateLowIntegrityNamedPipe(m_defaultPipeName);
-            var connection = new NamedPipeServerStream(PipeDirection.InOut, true, false, pipeHandle);
-            if (signalledOnWaitingForConnection != null)
-            {
-               signalledOnWaitingForConnection.Signal();
-               signalledOnWaitingForConnection = null;
-            }
-            var asyncResult = connection.BeginWaitForConnection(ar => acceptThreadSynchronization.Release(1), null);
-            acceptThreadSynchronization.WaitOne();
-            Console.WriteLine("Past acceptThreadSynchronization!");
-
-            if (asyncResult.IsCompleted) {
-               connection.EndWaitForConnection(asyncResult);
-
-               Logger.L(LoggerLevel.Info, "DSPEx Node got connection");
-
-               var session = new DtpNodeSession(this, connection, DSPExNodeRole.Server);
-               m_sessions.TryAdd(session);
-
-               OnClientConnected(new ClientConnectedEventArgs(session));
-            } else {
-               connection.Dispose();
-               pipeHandle.Dispose();
-            }
-         }
+         var session = new DtpNodeSession(this, stream, NodeRole.Server);
+         m_sessions.TryAdd(session);
+         OnClientConnected(new ClientConnectedEventArgs(session));
       }
 
       /// <summary>
@@ -86,12 +51,23 @@ namespace Dargon.Transport
       /// If null, connects to the default DSPEx pipe ("dargon" aka dargon daemon)
       /// </param>
       /// <returns></returns>
-      public IDSPExSession Connect(string pipeName = null)
+      public IDSPExSession Connect(string pipeName)
       {
-         var connection = new NamedPipeClientStream(".", pipeName ?? m_defaultPipeName, PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.WriteThrough);
+         var connection = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.WriteThrough);
          connection.Connect();
 
-         var session = new DtpNodeSession(this, connection, DSPExNodeRole.Client);
+         var session = new DtpNodeSession(this, connection, NodeRole.Client);
+         m_sessions.TryAdd(session);
+
+         return session;
+      }
+
+      public IDSPExSession Connect(int port)
+      {
+         var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+         socket.Connect(new IPEndPoint(IPAddress.Loopback, port));
+
+         var session = new DtpNodeSession(this, new NetworkStream(socket), NodeRole.Client);
          m_sessions.TryAdd(session);
 
          return session;
@@ -118,7 +94,7 @@ namespace Dargon.Transport
       public void Shutdown()
       {
          m_isAlive = false;
-         acceptThreadSynchronization.Release();
+         clientSource.Shutdown();
       }
    }
 }

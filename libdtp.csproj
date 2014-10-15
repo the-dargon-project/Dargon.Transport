@@ -58,11 +58,12 @@
     <Compile Include="DtpNodeSessionFrameProcessor.cs" />
     <Compile Include="IDtpNode.cs" />
     <Compile Include="IDtpNodeFactory.cs" />
+    <Compile Include="INamedPipeClientSource.cs" />
     <Compile Include="TransactionInitialMessage.cs" />
     <Compile Include="TransactionMessage.cs" />
     <Compile Include="LocallyInitializedTransactionHandler.cs" />
     <Compile Include="NamedPipeFrameTransmitter.cs" />
-    <Compile Include="DSPExNodeRole.cs" />
+    <Compile Include="NodeRole.cs" />
     <Compile Include="RemotelyInitializedTransactionHandler.cs" />
     <Compile Include="TcpFrameTransmitter.cs" />
     <Compile Include="IFrameTransmitter.cs" />
