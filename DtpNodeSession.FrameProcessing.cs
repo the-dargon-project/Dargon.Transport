@@ -64,7 +64,7 @@ namespace Dargon.Transport
                var frameLength = m_reader.ReadUInt32(); // includes frameLength
                Logger.L(LoggerLevel.Info, "Reading DSPEx Frame of Length " + frameLength);
                var frameContentLength = (int)frameLength - 4;
-               var buffer = TakeFrameBuffer(frameContentLength); // thread safe
+               var buffer = TakeFrameBuffer((int)frameLength); // thread safe
 
                // Copy frame length to the buffer's first four bytes
                buffer[0] = (byte)((frameLength >> 0) & 0xFF);
