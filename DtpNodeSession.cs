@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using ItzWarty;
+using ItzWarty.Collections;
 
 namespace Dargon.Transport
 {
@@ -31,8 +31,8 @@ namespace Dargon.Transport
       private readonly UniqueIdentificationSet m_locallyInitiatedUidSet;
       private readonly UniqueIdentificationSet m_remotelyInitiatedUidSet = new UniqueIdentificationSet(false); // TODO: Not really necessary
 
-      private readonly ConcurrentDictionary<uint, LocallyInitializedTransactionHandler> m_liTransactions = new ConcurrentDictionary<uint, LocallyInitializedTransactionHandler>();
-      private readonly ConcurrentDictionary<uint, RemotelyInitializedTransactionHandler> m_riTransactions = new ConcurrentDictionary<uint, RemotelyInitializedTransactionHandler>();
+      private readonly System.Collections.Concurrent.ConcurrentDictionary<uint, LocallyInitializedTransactionHandler> m_liTransactions = new System.Collections.Concurrent.ConcurrentDictionary<uint, LocallyInitializedTransactionHandler>();
+      private readonly System.Collections.Concurrent.ConcurrentDictionary<uint, RemotelyInitializedTransactionHandler> m_riTransactions = new System.Collections.Concurrent.ConcurrentDictionary<uint, RemotelyInitializedTransactionHandler>();
 
       public event ClientDisconnectedEventHandler Disconnected;
 
