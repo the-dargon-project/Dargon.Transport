@@ -69,7 +69,6 @@ namespace Dargon.Transport
          if (m_localRole == NodeRole.Client)
          {
             m_writer.Write((byte)DTP.DSPEX_INIT);
-            m_dspExElevated = true;
          }
       }
 

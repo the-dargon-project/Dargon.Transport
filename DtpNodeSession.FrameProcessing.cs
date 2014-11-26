@@ -38,9 +38,6 @@ namespace Dargon.Transport
       // : Frame Writer :
       private readonly BlockingCollection<byte[]> m_frameBuffersToSend = new BlockingCollection<byte[]>(new ConcurrentQueue<byte[]>());
 
-      // : dspex state :
-      private bool m_dspExElevated = false; // If false, the connection hasn't been elevated to DSPEx yet
-
       // Note: Frame Reader owns m_reader and can access it without a lock
       private void FrameReaderThreadStart()
       {
@@ -50,11 +47,6 @@ namespace Dargon.Transport
             var opcode = m_reader.ReadByte();
             if (opcode != (byte)DTP.DSPEX_INIT)
                throw new NotSupportedException("Expected DSP_EX_INIT opcode!");
-            m_dspExElevated = true;
-         }
-         else
-         {
-            m_dspExElevated = true; // performed at ctor
          }
 
          try
@@ -89,7 +81,7 @@ namespace Dargon.Transport
                Logger.L(LoggerLevel.Info, "Sent DSPEx Frame of Length " + frameLength + " to processor");
             }
          }
-         catch (EndOfStreamException e)
+         catch (EndOfStreamException)
          {
             // end of session
             IsAlive = false;
