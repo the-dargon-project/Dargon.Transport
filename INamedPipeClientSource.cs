@@ -1,9 +1,9 @@
-﻿using System.Net;
-using System.Net.Sockets;
-using ItzWarty.Networking;
+﻿using Dargon.Networking;
 using System;
 using System.IO;
 using System.IO.Pipes;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using Logger = Dargon.Transport.__DummyLoggerThisIsHorrible;
 

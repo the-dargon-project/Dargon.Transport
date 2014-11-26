@@ -1,15 +1,10 @@
-﻿using System;
+﻿using ItzWarty.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
-using ItzWarty.Collections;
-using ItzWarty.Networking;
 
-using Logger = Dargon.Transport.__DummyLoggerThisIsHorrible;
 
 namespace Dargon.Transport
 {
