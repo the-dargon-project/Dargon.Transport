@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("libdtp")]
-[assembly: AssemblyDescription("Dargon Transport Protocol - Legacy Dargon I/O.")]
+[assembly: AssemblyTitle("Dargon.Transport")]
+[assembly: AssemblyDescription("Dargon Transport Protocol - Legacy Dargon I/O (libdtp).")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("The Dargon Project")]
-[assembly: AssemblyProduct("libdsp")]
+[assembly: AssemblyProduct("Dargon.Transport")]
 [assembly: AssemblyCopyright("Copyright © ItzWarty 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

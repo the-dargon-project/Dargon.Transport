@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.22609.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libdtp", "libdtp.csproj", "{C9F92566-1F94-4235-944C-19364459F9A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Transport", "Dargon.Transport.csproj", "{C9F92566-1F94-4235-944C-19364459F9A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libdtp.Tests", "libdtp.Tests\libdtp.Tests.csproj", "{1740DA02-2AF7-4973-A52A-49F57DA943B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dargon.Transport.Tests", "libdtp.Tests\Dargon.Transport.Tests.csproj", "{1740DA02-2AF7-4973-A52A-49F57DA943B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

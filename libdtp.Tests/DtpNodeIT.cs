@@ -1,33 +1,35 @@
-﻿using System;
+﻿using Dargon.Transport;
+using Dargon.Transport.ClientImpl;
+using NMockito;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Dargon.Transport;
-using Dargon.Transport.ClientImpl;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading;
+using Xunit;
 
 namespace libdtp.Tests
 {
-   [TestClass]
-   public class DtpNodeIT
+   public class DtpNodeIT : NMockitoInstance
    {
       private const string pipeName = "DtpNodeIT";
-      private DtpNode m_daemonNode;
-      private DtpNode m_dimNode;
+      private IDtpNode m_daemonNode;
+      private IDtpNode m_dimNode;
 
-      [TestInitialize]
-      public void Setup()
+      public DtpNodeIT()
       {
-         m_daemonNode = DtpNode.CreateNode(true, pipeName);
-         m_dimNode = DtpNode.CreateNode(false, pipeName);
+         IDtpNodeFactory dtpNodeFactory = new DefaultDtpNodeFactory();
+         m_daemonNode = dtpNodeFactory.CreateNode(NodeRole.Server, pipeName);
+         m_dimNode = dtpNodeFactory.CreateNode(NodeRole.Client);
       }
 
-      [TestMethod]
+      [Fact]
       public void Run()
       {
+         Thread.Sleep(1000);
          var stopwatch = new Stopwatch();
          stopwatch.Start();
 
-         var dimSession = m_dimNode.Connect();
+         var dimSession = m_dimNode.Connect(pipeName);
          var echoTransactions = new List<EchoLith>();
          for (var i = 0; i < 100000; i++)
          {

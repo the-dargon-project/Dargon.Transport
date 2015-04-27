@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dargon.Transport</RootNamespace>
-    <AssemblyName>libdtp</AssemblyName>
+    <AssemblyName>Dargon.Transport</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\the-dargon-project\</SolutionDir>
@@ -33,17 +33,11 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="libdargon.utilities">
-      <HintPath>packages\libdargon.utilities.0.0.3\lib\net45\libdargon.utilities.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Dargon.Utilities">
+      <HintPath>packages\Dargon.Utilities.0.1.0\lib\net45\Dargon.Utilities.dll</HintPath>
     </Reference>
-    <Reference Include="libwarty, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\the-dargon-project\packages\libwarty.proxies-api.0.0.16\lib\net45\libwarty.dll</HintPath>
-    </Reference>
-    <Reference Include="libwarty.proxies-api, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\the-dargon-project\packages\libwarty.proxies-api.0.0.16\lib\net45\libwarty.proxies-api.dll</HintPath>
+    <Reference Include="ItzWarty.Commons">
+      <HintPath>packages\ItzWarty.Commons.0.1.1\lib\portable-net45+netcore45+MonoAndroid1+MonoTouch1\ItzWarty.Commons.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
