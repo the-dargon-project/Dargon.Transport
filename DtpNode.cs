@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Net;
 using System.Net.Sockets;
+using ItzWarty;
 
 
 namespace Dargon.Transport
@@ -90,6 +91,7 @@ namespace Dargon.Transport
       {
          m_isAlive = false;
          clientSource.Shutdown();
+         m_sessions.ForEach(s => s.Dispose());
       }
    }
 }

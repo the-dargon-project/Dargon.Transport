@@ -57,11 +57,11 @@ namespace Dargon.Transport
 
          // : Setup Reader/Writer Workers :
          m_reader = new BinaryReader(m_connection, Encoding.Default, true);
-         m_frameReaderThread = new Thread(FrameReaderThreadStart);
+         m_frameReaderThread = new Thread(FrameReaderThreadStart) { IsBackground = true };
          m_frameReaderThread.Start();
 
          m_writer = new BinaryWriter(m_connection, Encoding.Default, true);
-         m_frameWriterThread = new Thread(FrameWriterThreadStart);
+         m_frameWriterThread = new Thread(FrameWriterThreadStart) { IsBackground = true };
          m_frameWriterThread.Start();
 
          // If we're the client, Send DSP_EX_INIT to elevate from DSP to DSPEx
@@ -237,5 +237,9 @@ namespace Dargon.Transport
       }
 
       private void Shutdown() { m_isAlive = false; aliveCancellationTokenSource.Cancel(); }
+
+      public void Dispose() {
+         Shutdown();
+      }
    }
 }

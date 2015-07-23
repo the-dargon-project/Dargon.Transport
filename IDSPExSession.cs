@@ -1,6 +1,8 @@
-﻿namespace Dargon.Transport
+﻿using System;
+
+namespace Dargon.Transport
 {
-   public interface IDSPExSession
+   public interface IDSPExSession : IDisposable
    {
       event ClientDisconnectedEventHandler Disconnected;
 
