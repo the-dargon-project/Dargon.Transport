@@ -12,7 +12,6 @@ namespace libdtp.DipNodeStandaloneIT
       static void Main(string[] args)
       {
          var test = new DtpNodeIT();
-         test.Setup();
          test.Run();
          Environment.Exit(0);
       }
